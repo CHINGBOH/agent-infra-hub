@@ -1,8 +1,8 @@
 # skills-hub
 
-Claude Code Skills & Subagents 本地仓库 — 按需调用，服务 survey-analysis-platform 及通用项目。
+Claude Code Skills & Subagents + Agent 架构设计参考库 — 按需调用，服务 survey-analysis-platform 及通用项目。
 
-**290 MB | 12 个仓库 | 6 个分类 | ~350+ 可用 Skills**
+**~480 MB | 21 个仓库 | 7 个分类 | ~350+ Skills + 9 个 Agent 框架**
 
 ---
 
@@ -18,6 +18,11 @@ Claude Code Skills & Subagents 本地仓库 — 按需调用，服务 survey-ana
 | 学术报告撰写与审阅 | academic-research-skills | [→](#4-research-学术研究管道) |
 | 数据分析 subagent 分工 | VoltAgent 05-data-ai | [→](#5-subagents-专项-subagent-分工) |
 | 搜索更多 skills | 06-catalogs | [→](#6-catalogs-skills-目录-发现) |
+| 理解 Claude Code Agent 底层架构 | Dive-into-Claude-Code | [→](#7-agent-design-agent-架构设计) |
+| 多阶段工作流 + 质量门控设计 | metaswarm | [→](#7-agent-design-agent-架构设计) |
+| Agent 团队角色分工（lead/impl/review） | wshobson-agents | [→](#7-agent-design-agent-架构设计) |
+| 所有 Workflow 模式速查 | ultimate-guide | [→](#7-agent-design-agent-架构设计) |
+| 20-50 Agent 并行 + 锁协调 | agent-farm | [→](#7-agent-design-agent-架构设计) |
 
 ---
 
@@ -43,13 +48,24 @@ skills-hub/
 ├── 05-subagents/              专项 Subagent 分工
 │   └── awesome-claude-code-subagents/ VoltAgent — 100+ 专项 subagents
 │
-└── 06-catalogs/               Skills 目录（发现更多）
-    ├── awesome-claude-code/           hesreallyhim — 权威 curated list
-    ├── alirezarezvani-claude-skills/  313+ skills (研究/工程/商业)
-    ├── awesome-claude-code-toolkit/   rohitg00 — agents+commands+hooks
-    ├── composio-awesome-claude-skills/ Composio — 文档/文件/工作流
-    ├── travisvn-awesome-claude-skills/ travisvn — 精选列表
-    └── mingrath-awesome-claude-skills/ mingrath — 开发/数据/DevOps
+├── 06-catalogs/               Skills 目录（发现更多）
+│   ├── awesome-claude-code/           hesreallyhim — 权威 curated list
+│   ├── alirezarezvani-claude-skills/  313+ skills (研究/工程/商业)
+│   ├── awesome-claude-code-toolkit/   rohitg00 — agents+commands+hooks
+│   ├── composio-awesome-claude-skills/ Composio — 文档/文件/工作流
+│   ├── travisvn-awesome-claude-skills/ travisvn — 精选列表
+│   └── mingrath-awesome-claude-skills/ mingrath — 开发/数据/DevOps
+│
+└── 07-agent-design/           Agent 架构设计（★ 新增）
+    ├── Dive-into-Claude-Code/         VILA-Lab — 学术级架构逆向分析
+    ├── metaswarm/                     dsifry — 9 阶段工作流 + 质量门控
+    ├── wshobson-agents/               wshobson — 81 插件 + 4 角色团队
+    ├── ultimate-guide/                FlorianBruniaux — 20+ 工作流模式
+    ├── agent-farm/                    Dicklesworthstone — 并行 20-50 agents
+    ├── ccswarm/                       nwiizo — Git Worktree 隔离
+    ├── claude-swarm/                  affaan-m — 任务依赖图 DAG
+    ├── agent-orchestrator/            ComposioHQ — CI/PR 全自动化
+    └── ruflo/                         ruvnet — 企业级 Swarm + RAG
 ```
 
 ---
@@ -384,20 +400,65 @@ find /home/l/projects/skills-hub -name ".git" -maxdepth 3 \
 
 ---
 
-## 与 survey-analysis-platform 的对应关系
+## 7. agent-design — Agent 架构设计
 
+> 详细导航见 [07-agent-design/README.md](07-agent-design/README.md)
+
+| 仓库 | 定位 | 核心价值 |
+|------|------|---------|
+| `Dive-into-Claude-Code/` | 学术级架构分析 | 理解 Agent 底层（1.6% AI + 98.4% 基础设施） |
+| `metaswarm/` | 9 阶段工作流框架 | 质量门控设计、ORCHESTRATION.md |
+| `wshobson-agents/` | 81 插件生产系统 | 4 角色团队（lead/implementer/reviewer/debugger） |
+| `ultimate-guide/` | 完整文档 + 速查 | 20+ 工作流模式、41 架构图、cheatsheet |
+| `agent-farm/` | 大规模并行框架 | 20-50 Agent 并行、文件锁协调 |
+| `ccswarm/` | Rust 并行实现 | Git Worktree 隔离方案 |
+| `claude-swarm/` | SDK 示范项目 | 任务依赖图（DAG）驱动并行 |
+| `agent-orchestrator/` | CI 全自动化 | Plan→Spawn→自动修复 CI/PR |
+| `ruflo/` | 企业级平台 | Swarm 智能 + RAG 集成 |
+
+**推荐阅读顺序：**
 ```
-survey-analysis-platform 模块          推荐 Skill
-─────────────────────────────────────────────────────
-00-explore/ (Jupyter EDA)          ← notebook-intelligence
-01-clean/   (数据清洗)              ← data-engineer subagent
-02-analyze/ (R 统计分析)            ← writing-r-code + data-analyst
-03-integrate/ (结果整合)            ← data-scientist subagent
-04-report/  (Quarto 报告)           ← posit-dev-skills/quarto + writing-qmd-scientific
-app/agent   (需求采集对话)           ← academic-pipeline + business-analyst
-app/tools   (反幻觉核验)             ← ClaudeR 审计协议
+Dive-into-Claude-Code/README_zh.md（10 min）
+→ ultimate-guide/guide/cheatsheet.md（10 min）
+→ metaswarm/ORCHESTRATION.md（20 min）
+→ wshobson-agents/plugins/agent-teams/README.md（10 min）
 ```
 
 ---
 
-*最后更新：2026-05-22 | 维护：survey-analysis-platform 项目组*
+## 与 survey-analysis-platform 的完整对应关系
+
+```
+survey-analysis-platform 模块      Skills                Agent 设计参考
+────────────────────────────────────────────────────────────────────────
+00-explore/ (Jupyter EDA)      ← notebook-intelligence
+01-clean/   (数据清洗)          ← data-engineer subagent  + team-implementer
+02-analyze/ (R 统计分析)        ← writing-r-code           + metaswarm/orchestrated-execution
+03-integrate/ (结果整合)        ← data-scientist subagent  + team-reviewer
+04-report/  (Quarto 报告)       ← posit-dev-skills/quarto  + wshobson-agents/agent-teams
+app/agent   (主循环设计)        ←                            Dive-into-Claude-Code/architecture
+app/agent   (需求采集对话)      ← academic-pipeline         + ultimate-guide/agent-teams.md
+app/agent   (工作流模式)        ←                            metaswarm/9阶段工作流
+app/tools   (工具设计)          ←                            Dive-into-Claude-Code/build-your-own-agent
+app/tools   (反幻觉核验)        ← ClaudeR 审计协议           + metaswarm/design-review-gate
+管道质量门控                    ← Pydantic schema            + metaswarm/skills/plan-review-gate
+并行分析模块                    ←                            agent-farm/文件锁设计
+任务依赖顺序                    ←                            claude-swarm/DAG 设计
+```
+
+---
+
+## 批量更新所有仓库
+
+```bash
+find /home/l/projects/skills-hub -maxdepth 3 -name ".git" -type d \
+  | while read g; do
+      d=$(dirname "$g")
+      echo "=== $(basename $d) ==="
+      git -C "$d" pull --ff-only 2>&1 | head -1
+    done
+```
+
+---
+
+*最后更新：2026-05-22 | 21 仓库 | 维护：survey-analysis-platform 项目组*
