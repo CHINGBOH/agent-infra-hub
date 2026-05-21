@@ -1,8 +1,19 @@
-# skills-hub
+# agent-infra-hub
 
-Claude Code Skills & Subagents + Agent 架构设计参考库 — 按需调用，服务 survey-analysis-platform 及通用项目。
+围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~480 MB | 21 个仓库 | 7 个分类 | ~350+ Skills + 9 个 Agent 框架**
+**~630 MB | 31 个仓库 | 8 个分类**
+
+```
+LLM（CPU）
+  ├── Skills（行为注入）          01-06
+  ├── Agent 设计（进程架构）       07
+  └── 基础设施（微型 OS 四支柱）   08
+       ├── Hooks          中断系统
+       ├── Context Window 内存管理
+       ├── Tool Use / MCP 系统调用
+       └── Subagent       进程隔离
+```
 
 ---
 
@@ -23,6 +34,12 @@ Claude Code Skills & Subagents + Agent 架构设计参考库 — 按需调用，
 | Agent 团队角色分工（lead/impl/review） | wshobson-agents | [→](#7-agent-design-agent-架构设计) |
 | 所有 Workflow 模式速查 | ultimate-guide | [→](#7-agent-design-agent-架构设计) |
 | 20-50 Agent 并行 + 锁协调 | agent-farm | [→](#7-agent-design-agent-架构设计) |
+| **Hooks 13个生命周期事件实现** | claude-code-hooks-mastery | [→](#8-infrastructure-基础设施四大支柱) |
+| **Context 压缩 + Ghost Token 检测** | token-optimizer | [→](#8-infrastructure-基础设施四大支柱) |
+| **Claude Code 作为 MCP Server** | claude-code-mcp | [→](#8-infrastructure-基础设施四大支柱) |
+| **Boomerang 任务拆分 MCP 模式** | claude-code-mcp-enhanced | [→](#8-infrastructure-基础设施四大支柱) |
+| **Agent Harness 完整系统（82k★）** | ECC | [→](#8-infrastructure-基础设施四大支柱) |
+| **Hub-and-Spoke 上下文隔离架构** | sub-agent-collective | [→](#8-infrastructure-基础设施四大支柱) |
 
 ---
 
@@ -56,16 +73,31 @@ skills-hub/
 │   ├── travisvn-awesome-claude-skills/ travisvn — 精选列表
 │   └── mingrath-awesome-claude-skills/ mingrath — 开发/数据/DevOps
 │
-└── 07-agent-design/           Agent 架构设计（★ 新增）
-    ├── Dive-into-Claude-Code/         VILA-Lab — 学术级架构逆向分析
-    ├── metaswarm/                     dsifry — 9 阶段工作流 + 质量门控
-    ├── wshobson-agents/               wshobson — 81 插件 + 4 角色团队
-    ├── ultimate-guide/                FlorianBruniaux — 20+ 工作流模式
-    ├── agent-farm/                    Dicklesworthstone — 并行 20-50 agents
-    ├── ccswarm/                       nwiizo — Git Worktree 隔离
-    ├── claude-swarm/                  affaan-m — 任务依赖图 DAG
-    ├── agent-orchestrator/            ComposioHQ — CI/PR 全自动化
-    └── ruflo/                         ruvnet — 企业级 Swarm + RAG
+├── 07-agent-design/           Agent 架构设计
+│   ├── Dive-into-Claude-Code/         VILA-Lab — 学术级架构逆向分析
+│   ├── metaswarm/                     dsifry — 9 阶段工作流 + 质量门控
+│   ├── wshobson-agents/               wshobson — 81 插件 + 4 角色团队
+│   ├── ultimate-guide/                FlorianBruniaux — 20+ 工作流模式
+│   ├── agent-farm/                    Dicklesworthstone — 并行 20-50 agents
+│   ├── ccswarm/                       nwiizo — Git Worktree 隔离
+│   ├── claude-swarm/                  affaan-m — 任务依赖图 DAG
+│   ├── agent-orchestrator/            ComposioHQ — CI/PR 全自动化
+│   └── ruflo/                         ruvnet — 企业级 Swarm + RAG
+│
+└── 08-infrastructure/         基础设施四大支柱（★ 新增）
+    ├── hooks/                         中断系统
+    │   ├── claude-code-hooks-mastery/ disler — 13 事件完整实现 + TTS + 安全
+    │   ├── claude-code-hooks-multi-agent-observability/ disler — 多 Agent 监控
+    │   └── claude-code-hooks/         karanb192 — 即用 hooks 集合
+    ├── context-window/                内存管理
+    │   └── token-optimizer/           alexgreensh — Ghost Token + 5层压缩
+    ├── tool-use-mcp/                  系统调用层
+    │   ├── claude-code-mcp/           steipete — agent-in-agent MCP
+    │   ├── claude-code-mcp-enhanced/  grahama1970 — Boomerang 模式
+    │   └── claude-code-everything/    wesammustafa — 全栈实战手册
+    └── subagent-isolation/            进程隔离
+        ├── ECC/                       affaan-m — 82k★ Agent Harness
+        └── claude-code-sub-agent-collective/ vanzan01 — Hub-and-Spoke
 ```
 
 ---
@@ -423,6 +455,19 @@ Dive-into-Claude-Code/README_zh.md（10 min）
 → metaswarm/ORCHESTRATION.md（20 min）
 → wshobson-agents/plugins/agent-teams/README.md（10 min）
 ```
+
+---
+
+## 8. infrastructure — 基础设施四大支柱
+
+> 详细导航见 [08-infrastructure/README.md](08-infrastructure/README.md)
+
+| 支柱 | 计算机类比 | 核心仓库 | 关键价值 |
+|------|-----------|---------|---------|
+| Hooks | 中断处理 | `hooks/claude-code-hooks-mastery` | 13 个生命周期事件，pre_tool_use 可阻断 |
+| Context Window | 内存管理 | `context-window/token-optimizer` | Ghost Token 检测，5层 Compaction 策略 |
+| Tool Use / MCP | 系统调用 | `tool-use-mcp/claude-code-mcp-enhanced` | Boomerang 拆任务，agent-in-agent 递归 |
+| Subagent Isolation | 进程隔离 | `subagent-isolation/ECC` | 82k★ Harness 系统，NanoClaw 编排引擎 |
 
 ---
 
