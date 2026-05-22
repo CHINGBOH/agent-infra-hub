@@ -120,6 +120,7 @@ agent-infra-hub/
 ./tools/agent_kb.py build
 ./tools/agent_kb.py repl
 ./tools/agent_kb.py ask "我要做建筑造价知识库 agent，需要哪些资料？" --json
+./tools/agent_kb.py answer "我要做建筑造价知识库 agent，需要 Milvus 和知识图谱吗？"
 ./tools/agent_kb.py search "Milvus knowledge graph construction cost"
 ```
 

@@ -13,6 +13,8 @@ import os
 import re
 import sqlite3
 import sys
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -82,6 +84,9 @@ DOMAIN_KEYWORDS = {
     "observability": ["observability", "dashboard", "hud", "telemetry", "hooks", "观测"],
     "skills": ["skill", "skills", "capability", "catalog", "能力"],
 }
+
+ANSWER_DEFAULT_MODEL = "deepseek-chat"
+ANSWER_DEFAULT_BASE_URL = "https://api.deepseek.com"
 
 RECOMMENDATION_SETS = {
     "general": [
@@ -619,6 +624,132 @@ def command_ask(args: argparse.Namespace) -> int:
     return 0
 
 
+def source_pack(rows: Sequence[dict], limit: int | None = None) -> list[dict]:
+    pack: list[dict] = []
+    for i, row in enumerate(rows, 1):
+        if limit is not None and i > limit:
+            break
+        pack.append(
+            {
+                "source_id": i,
+                "path": row["path"],
+                "chunk_id": row["chunk_id"],
+                "title": row["title"],
+                "heading": row["heading"],
+                "snippet": row["snippet"],
+                "category": row["category"],
+                "doc_type": row["doc_type"],
+                "tags": row["tags"],
+            }
+        )
+    return pack
+
+
+def source_text(pack: Sequence[dict]) -> str:
+    lines: list[str] = []
+    for item in pack:
+        lines.append(
+            f"[{item['source_id']}] {item['path']}#{item['chunk_id']} | "
+            f"{item['title']} | {item['heading']}"
+        )
+        lines.append(item["snippet"])
+    return "\n\n".join(lines)
+
+
+def deepseek_generate(question: str, sources: Sequence[dict], args: argparse.Namespace) -> dict:
+    api_key = os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError("Set DEEPSEEK_API_KEY before using `answer`.")
+
+    base_url = (os.getenv("DEEPSEEK_BASE_URL") or os.getenv("OPENAI_BASE_URL") or ANSWER_DEFAULT_BASE_URL).rstrip("/")
+    model = os.getenv("DEEPSEEK_MODEL") or os.getenv("OPENAI_MODEL") or ANSWER_DEFAULT_MODEL
+    system_prompt = (
+        "You are the agent layer on top of agent-infra-hub. "
+        "Answer in the same language as the question. "
+        "Use only the provided sources and cite them with [source_id] references. "
+        "If evidence is insufficient, say what source is missing. "
+        "Do not invent repository facts."
+    )
+    user_prompt = (
+        f"Question:\n{question}\n\n"
+        f"Sources:\n{source_text(sources)}\n\n"
+        "Write a concise, grounded answer. Include cited source ids inline."
+    )
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        "temperature": getattr(args, "temperature", 0.2),
+        "max_tokens": getattr(args, "max_tokens", 1200),
+    }
+    request = urllib.request.Request(
+        f"{base_url}/chat/completions",
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=getattr(args, "timeout", 60)) as resp:
+            response = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace") if exc.fp else ""
+        raise RuntimeError(f"DeepSeek request failed: {exc.code} {exc.reason}: {body}".strip()) from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"DeepSeek request failed: {exc.reason}") from exc
+
+    try:
+        content = response["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, TypeError) as exc:
+        raise RuntimeError(f"Unexpected DeepSeek response: {response}") from exc
+
+    return {
+        "model": model,
+        "base_url": base_url,
+        "answer": content,
+        "raw": response,
+    }
+
+
+def answer_text(data: dict) -> str:
+    lines = [f"model: {data['model']}", f"base_url: {data['base_url']}", "", data["answer"]]
+    if data.get("sources"):
+        lines.append("")
+        lines.append("sources:")
+        for item in data["sources"]:
+            lines.append(f"- [{item['source_id']}] {item['path']}#{item['chunk_id']} | {item['heading']}")
+    return "\n".join(lines)
+
+
+def command_answer(args: argparse.Namespace) -> int:
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
+    domains = route_domains(args.question)
+    rows = search_with_expansion(conn, args, domains)
+    if not rows:
+        rows = search_with_expansion(conn, argparse.Namespace(**{**vars(args), "limit": 3}), ["general"])
+    sources = source_pack(rows, getattr(args, "source_limit", 5))
+    try:
+        result = deepseek_generate(args.question, sources, args)
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr)
+        print("Use `ask`/`recommend` for retrieval-only mode, or set DeepSeek env vars for synthesis.", file=sys.stderr)
+        return 2
+
+    data = {
+        "question": args.question,
+        "detected_domains": domains,
+        "sources": sources,
+        **result,
+    }
+    print_json_or_text(data, args.json, answer_text)
+    return 0
+
 
 def expanded_queries(question: str, domains: Sequence[str]) -> list[str]:
     queries = [question]
@@ -798,6 +929,7 @@ def print_json_or_text(data, as_json: bool, text_fn=None) -> None:
 REPL_HELP = """Commands:
   <question>                  Ask by default and return a context pack
   ask <question>              Ask a question
+  answer <question>           Ask and synthesize with DeepSeek
   search <query>              Search indexed chunks
   recommend <intent>          Recommend skills, agents, and source paths
   show <chunk_id>             Show a source chunk
@@ -850,7 +982,7 @@ def repl_command_args(db: str, words: list[str]) -> list[str] | None:
         return ["__exit__"]
     if command in {"help", "?"}:
         return ["__help__"]
-    if command in {"ask", "search", "recommend"}:
+    if command in {"ask", "search", "recommend", "answer"}:
         text, options = split_text_command(words[1:])
         if not text:
             print(f"{command} requires text", file=sys.stderr)
@@ -923,6 +1055,17 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     p.add_argument("--json", action="store_true")
     add_common_filters(p)
     p.set_defaults(func=command_ask)
+
+    p = sub.add_parser("answer", help="Generate a DeepSeek-synthesized answer from retrieved context")
+    p.add_argument("question")
+    p.add_argument("--limit", type=int, default=8)
+    p.add_argument("--source-limit", type=int, default=5)
+    p.add_argument("--temperature", type=float, default=0.2)
+    p.add_argument("--max-tokens", type=int, default=1200)
+    p.add_argument("--timeout", type=int, default=60)
+    p.add_argument("--json", action="store_true")
+    add_common_filters(p)
+    p.set_defaults(func=command_answer)
 
     p = sub.add_parser("show", help="Show a chunk by id")
     p.add_argument("chunk_id", type=int)
