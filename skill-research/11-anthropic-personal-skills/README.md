@@ -17,8 +17,8 @@
 | [mcp-builder](mcp-builder/) | 构建高质量 MCP 服务器 | 四阶段：研究 → 实现 → 测试 → 评估 | `references/` 目录（多个文档） |
 | [skill-creator](skill-creator/) | 创建和评估技能 | 评估循环 + 描述优化 | `agents/`、`scripts/`、`references/` |
 | [slack-gif-creator](slack-gif-creator/) | 制作适合 Slack 的动态 GIF | PIL + GIFBuilder 库 | `core/gif_builder.py` |
-| [theme-factory](theme-factory/) | 为 Artifact 应用主题样式 | 主题系统 | 未知 |
-| [web-artifacts-builder](web-artifacts-builder/) | 构建复杂多组件 HTML Artifact | 组件化 HTML 构建 | 未知 |
+| [theme-factory](theme-factory/) | 为 Artifact 应用主题样式 | 分析现有 Artifact → 应用 CSS 设计令牌系统 | `themes/` 目录（推测） |
+| [web-artifacts-builder](web-artifacts-builder/) | 构建复杂多组件 HTML Artifact | 组件分解 → 状态设计 → 单文件实现 | 无强制模板（推测） |
 
 ---
 

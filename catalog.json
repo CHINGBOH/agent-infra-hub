@@ -115,8 +115,9 @@
       "source": "Anthropic official",
       "path": "skill-research/11-anthropic-personal-skills/theme-factory/README.md",
       "trigger": "Apply themes and styles to artifacts",
-      "tags": ["theme", "style", "artifact", "ui"],
-      "status": "placeholder_incomplete",
+      "tags": ["theme", "style", "artifact", "ui", "css-tokens", "design-system"],
+      "key_pattern": "analyze_artifact -> select_theme -> apply_css_tokens -> validate",
+      "status": "inferred_reconstructed",
       "language": "en"
     },
     {
@@ -126,9 +127,10 @@
       "subtype": "anthropic_personal",
       "source": "Anthropic official",
       "path": "skill-research/11-anthropic-personal-skills/web-artifacts-builder/README.md",
-      "trigger": "Build complex multi-component HTML artifacts",
-      "tags": ["html", "artifact", "web", "multi-component"],
-      "status": "placeholder_incomplete",
+      "trigger": "Build complex multi-component HTML artifacts: dashboards, tools, multi-panel apps",
+      "tags": ["html", "artifact", "web", "multi-component", "dashboard", "state-management"],
+      "key_pattern": "component_breakdown -> state_design -> implement -> validate",
+      "status": "inferred_reconstructed",
       "language": "en"
     },
     {
