@@ -44,6 +44,8 @@ LLM（CPU）
 | **统计分析 Agent 组装路径** | use-cases/statistical-analysis-agent.md | [→](use-cases/statistical-analysis-agent.md) |
 | **建筑造价知识库 Agent 组装路径** | use-cases/construction-cost-knowledge-base-agent.md | [→](use-cases/construction-cost-knowledge-base-agent.md) |
 | **Agent 查询可用性审计** | docs/audits/agent-query-readiness.md | [→](docs/audits/agent-query-readiness.md) |
+| **本地知识库 CLI** | tools/agent_kb.py | [→](docs/cli/agent-kb-cli.md) |
+| **Agent KB CLI 架构与 skill 选择** | docs/architecture/agent-kb-cli-agent-skill-selection.md | [→](docs/architecture/agent-kb-cli-agent-skill-selection.md) |
 
 ---
 
@@ -107,6 +109,20 @@ agent-infra-hub/
     ├── catalog.yaml                   awesome / 编排 / 路由 / 门控 / 观测 / skills 清单
     └── README.md                      分类法与导入策略
 ```
+
+---
+
+## 本地知识库 CLI
+
+本仓库提供零依赖本地检索入口：
+
+```bash
+./tools/agent_kb.py build
+./tools/agent_kb.py ask "我要做建筑造价知识库 agent，需要哪些资料？" --json
+./tools/agent_kb.py search "Milvus knowledge graph construction cost"
+```
+
+详细说明见 [docs/cli/agent-kb-cli.md](docs/cli/agent-kb-cli.md)。架构与 agent/skill 选择见 [docs/architecture/agent-kb-cli-agent-skill-selection.md](docs/architecture/agent-kb-cli-agent-skill-selection.md)。
 
 ---
 

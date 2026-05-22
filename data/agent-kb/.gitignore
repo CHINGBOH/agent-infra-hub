@@ -1,0 +1,5 @@
+# Generated local knowledge-base indexes
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
