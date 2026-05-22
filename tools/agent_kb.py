@@ -505,7 +505,7 @@ def search_rows(conn: sqlite3.Connection, args: argparse.Namespace) -> list[sqli
     where, params = where_filters(args)
     if meta.get("fts5") == "true":
         sql = """
-        SELECT c.id AS chunk_id, d.path, d.title, d.category, d.doc_type, d.tags,
+        SELECT c.id AS chunk_id, d.id AS document_id, d.path, d.title, d.category, d.doc_type, d.tags,
                c.ordinal, c.heading, substr(c.text, 1, 360) AS snippet,
                bm25(chunks_fts) AS rank
         FROM chunks_fts
@@ -523,7 +523,7 @@ def search_rows(conn: sqlite3.Connection, args: argparse.Namespace) -> list[sqli
 
     like = f"%{args.query}%"
     sql = """
-    SELECT c.id AS chunk_id, d.path, d.title, d.category, d.doc_type, d.tags,
+    SELECT c.id AS chunk_id, d.id AS document_id, d.path, d.title, d.category, d.doc_type, d.tags,
            c.ordinal, c.heading, substr(c.text, 1, 320) AS snippet, 0 AS rank
     FROM chunks c
     JOIN documents d ON d.id = c.document_id
@@ -618,6 +618,7 @@ def command_ask(args: argparse.Namespace) -> int:
         "detected_domains": domains,
         "recommended_next_actions": next_actions(domains),
         "context_pack": rows,
+        "documents": document_pack(conn, rows, args.doc_limit, args.doc_chars) if args.include_docs else [],
         "agent_instruction": "Use the context_pack paths and chunk ids as citations. If evidence is insufficient, say what source is missing instead of guessing.",
     }
     print_json_or_text(data, args.json, ask_text)
@@ -656,7 +657,48 @@ def source_text(pack: Sequence[dict]) -> str:
     return "\n\n".join(lines)
 
 
-def deepseek_generate(question: str, sources: Sequence[dict], args: argparse.Namespace) -> dict:
+def document_text(conn: sqlite3.Connection, document_id: int) -> str:
+    rows = conn.execute(
+        "SELECT text FROM chunks WHERE document_id = ? ORDER BY ordinal",
+        (document_id,),
+    ).fetchall()
+    return "\n\n".join(r[0] for r in rows).strip()
+
+
+def document_pack(conn: sqlite3.Connection, rows: Sequence[sqlite3.Row], limit: int, char_limit: int) -> list[dict]:
+    docs: list[dict] = []
+    seen: set[int] = set()
+    for row in rows:
+        doc_id = int(row["document_id"])
+        if doc_id in seen:
+            continue
+        seen.add(doc_id)
+        content = document_text(conn, doc_id)[:char_limit]
+        docs.append(
+            {
+                "document_id": doc_id,
+                "path": row["path"],
+                "title": row["title"],
+                "category": row["category"],
+                "doc_type": row["doc_type"],
+                "tags": row["tags"],
+                "content": content,
+            }
+        )
+        if len(docs) >= limit:
+            break
+    return docs
+
+
+def documents_text(docs: Sequence[dict]) -> str:
+    lines: list[str] = []
+    for doc in docs:
+        lines.append(f"--- {doc['path']} | {doc['title']} ---")
+        lines.append(doc["content"])
+    return "\n\n".join(lines)
+
+
+def deepseek_generate(question: str, sources: Sequence[dict], args: argparse.Namespace, docs: Sequence[dict] | None = None) -> dict:
     api_key = os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("Set DEEPSEEK_API_KEY before using `answer`.")
@@ -670,9 +712,10 @@ def deepseek_generate(question: str, sources: Sequence[dict], args: argparse.Nam
         "If evidence is insufficient, say what source is missing. "
         "Do not invent repository facts."
     )
+    context_block = documents_text(docs) if docs else source_text(sources)
     user_prompt = (
         f"Question:\n{question}\n\n"
-        f"Sources:\n{source_text(sources)}\n\n"
+        f"Context:\n{context_block}\n\n"
         "Write a concise, grounded answer. Include cited source ids inline."
     )
     payload = {
@@ -722,6 +765,12 @@ def answer_text(data: dict) -> str:
         lines.append("sources:")
         for item in data["sources"]:
             lines.append(f"- [{item['source_id']}] {item['path']}#{item['chunk_id']} | {item['heading']}")
+    if data.get("documents"):
+        lines.append("")
+        lines.append("documents:")
+        for doc in data["documents"]:
+            lines.append(f"--- {doc['path']} | {doc['title']} ---")
+            lines.append(doc["content"])
     return "\n".join(lines)
 
 
@@ -734,8 +783,9 @@ def command_answer(args: argparse.Namespace) -> int:
     if not rows:
         rows = search_with_expansion(conn, argparse.Namespace(**{**vars(args), "limit": 3}), ["general"])
     sources = source_pack(rows, getattr(args, "source_limit", 5))
+    documents = document_pack(conn, rows, args.doc_limit, args.doc_chars) if args.include_docs else []
     try:
-        result = deepseek_generate(args.question, sources, args)
+        result = deepseek_generate(args.question, sources, args, documents)
     except RuntimeError as exc:
         print(str(exc), file=sys.stderr)
         print("Use `ask`/`recommend` for retrieval-only mode, or set DeepSeek env vars for synthesis.", file=sys.stderr)
@@ -841,6 +891,11 @@ def ask_text(data: dict) -> str:
             f"   heading: {row['heading']}\n"
             f"   snippet: {row['snippet']}"
         )
+    if data.get("documents"):
+        lines.append("\ndocuments:")
+        for doc in data["documents"]:
+            lines.append(f"--- {doc['path']} | {doc['title']} ---")
+            lines.append(doc["content"])
     lines.append("\nagent instruction: " + data["agent_instruction"])
     return "\n".join(lines)
 
@@ -871,6 +926,7 @@ def command_recommend(args: argparse.Namespace) -> int:
         "detected_domains": domains,
         "recommendations": recommendation_items(domains),
         "context_pack": rows,
+        "documents": document_pack(conn, rows, args.doc_limit, args.doc_chars) if args.include_docs else [],
         "agent_instruction": "Use recommendations as routing hints and context_pack as source evidence. Inspect referenced files before acting.",
     }
     print_json_or_text(data, args.json, recommend_text)
@@ -891,6 +947,11 @@ def recommend_text(data: dict) -> str:
     lines.append("\ncontext pack:")
     for i, row in enumerate(data["context_pack"], 1):
         lines.append(f"{i}. {row['title']} — {row['path']}#{row['chunk_id']} — {row['heading']}")
+    if data.get("documents"):
+        lines.append("\ndocuments:")
+        for doc in data["documents"]:
+            lines.append(f"--- {doc['path']} | {doc['title']} ---")
+            lines.append(doc["content"])
     lines.append("\nagent instruction: " + data["agent_instruction"])
     return "\n".join(lines)
 
@@ -943,6 +1004,9 @@ Common filters for ask/search/recommend/docs:
   --category CATEGORY
   --doc-type TYPE
   --tag TAG
+  --include-docs
+  --doc-limit N
+  --doc-chars N
   --json
 """
 
@@ -1025,6 +1089,15 @@ def command_repl(args: argparse.Namespace) -> int:
             print(f"command exited with code {code}", file=sys.stderr)
     return 0
 
+def add_query_filters(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--category", help="Filter by top-level category, for example 05-subagents or use-cases")
+    parser.add_argument("--doc-type", help="Filter by inferred document type, for example skill, subagent, use_case, catalog")
+    parser.add_argument("--tag", help="Filter by inferred domain tag, for example construction_cost, statistics, governance")
+    parser.add_argument("--include-docs", action="store_true", help="Include reconstructed markdown documents for top hits")
+    parser.add_argument("--doc-limit", type=int, default=1, help="Maximum documents to include when --include-docs is set")
+    parser.add_argument("--doc-chars", type=int, default=12000, help="Maximum characters per included document")
+
+
 def add_common_filters(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--category", help="Filter by top-level category, for example 05-subagents or use-cases")
     parser.add_argument("--doc-type", help="Filter by inferred document type, for example skill, subagent, use_case, catalog")
@@ -1046,14 +1119,14 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     p.add_argument("query")
     p.add_argument("--limit", type=int, default=8)
     p.add_argument("--json", action="store_true")
-    add_common_filters(p)
+    add_query_filters(p)
     p.set_defaults(func=command_search)
 
     p = sub.add_parser("ask", help="Return a structured context pack for a human or agent question")
     p.add_argument("question")
     p.add_argument("--limit", type=int, default=8)
     p.add_argument("--json", action="store_true")
-    add_common_filters(p)
+    add_query_filters(p)
     p.set_defaults(func=command_ask)
 
     p = sub.add_parser("answer", help="Generate a DeepSeek-synthesized answer from retrieved context")
@@ -1064,7 +1137,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     p.add_argument("--max-tokens", type=int, default=1200)
     p.add_argument("--timeout", type=int, default=60)
     p.add_argument("--json", action="store_true")
-    add_common_filters(p)
+    add_query_filters(p)
     p.set_defaults(func=command_answer)
 
     p = sub.add_parser("show", help="Show a chunk by id")
@@ -1077,7 +1150,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     p.add_argument("intent")
     p.add_argument("--limit", type=int, default=6)
     p.add_argument("--json", action="store_true")
-    add_common_filters(p)
+    add_query_filters(p)
     p.set_defaults(func=command_recommend)
 
     p = sub.add_parser("docs", help="List indexed documents")

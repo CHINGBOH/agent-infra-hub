@@ -4,7 +4,7 @@ This document selects the agent architectures and skills that are most useful fo
 
 ## Target
 
-The CLI should help humans and agents ask this repository questions, retrieve grounded context, inspect source chunks, and discover relevant skills/subagents/catalog entries. It should remain local-first and service-free by default, while leaving clean extension points for Milvus, knowledge graphs, DeepSeek synthesis, MCP, and governance.
+The CLI should help humans and agents ask this repository questions, retrieve grounded context, inspect source chunks, optionally recover full markdown documents, and discover relevant skills/subagents/catalog entries. It should remain local-first and service-free by default, while leaving clean extension points for Milvus, knowledge graphs, DeepSeek synthesis, MCP, and governance.
 
 ## Core Execution Chain
 

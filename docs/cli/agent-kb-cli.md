@@ -25,6 +25,8 @@ agent-kb> exit
 
 A line without a command is treated as `ask <question>`. Use `help` inside the shell for the command list.
 
+`--include-docs` adds reconstructed markdown content for the top matching source documents.
+
 ## Build
 
 ```bash
@@ -61,13 +63,14 @@ The builder skips `.git`, dependency folders, generated caches, and locally clon
 
 ```bash
 ./tools/agent_kb.py ask "我要做建筑造价知识库 agent，需要哪些资料？" --json
+./tools/agent_kb.py ask "我要做建筑造价知识库 agent，需要 Milvus 和知识图谱吗？" --include-docs --doc-limit 1
 ```
 
-Agents should cite `path#chunk_id` entries from `context_pack` and refuse unsupported claims when the context pack is insufficient.
+Use `--include-docs` when you want the CLI to bring back the reconstructed markdown file content for the top hit. Agents should still cite `path#chunk_id` entries from `context_pack` and refuse unsupported claims when the context pack is insufficient.
 
 ## Answer
 
-`answer` does retrieval first, then sends the retrieved sources to DeepSeek for a grounded final response. Use this when you want the CLI to behave like a real agent instead of only returning evidence.
+`answer` does retrieval first, then sends the retrieved sources to DeepSeek for a grounded final response. Use this when you want the CLI to behave like a real agent instead of only returning evidence. Add `--include-docs` if you want the reconstructed markdown file content included in the prompt.
 
 ```bash
 export DEEPSEEK_API_KEY=...
