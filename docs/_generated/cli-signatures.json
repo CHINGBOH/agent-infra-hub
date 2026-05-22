@@ -1,0 +1,859 @@
+{
+  "program": "agent_kb.py",
+  "description": "Build and query the local agent-infra-hub knowledge base.",
+  "global_options": [
+    {
+      "option_strings": [
+        "-h",
+        "--help"
+      ],
+      "dest": "help",
+      "nargs": 0,
+      "type": null,
+      "default": "==SUPPRESS==",
+      "choices": null,
+      "required": false,
+      "help": "show this help message and exit",
+      "positional": false
+    },
+    {
+      "option_strings": [
+        "--db"
+      ],
+      "dest": "db",
+      "nargs": null,
+      "type": null,
+      "default": "data/agent-kb/index.sqlite",
+      "choices": null,
+      "required": false,
+      "help": "SQLite index path",
+      "positional": false
+    }
+  ],
+  "subcommands": {
+    "build": {
+      "help": "Build the local SQLite/FTS knowledge index",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--root"
+          ],
+          "dest": "root",
+          "nargs": null,
+          "type": null,
+          "default": ".",
+          "choices": null,
+          "required": false,
+          "help": "Repository root",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--include-code"
+          ],
+          "dest": "include_code",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "Also index common code files",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        }
+      ]
+    },
+    "search": {
+      "help": "Search indexed chunks",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [],
+          "dest": "query",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": true,
+          "help": "",
+          "positional": true
+        },
+        {
+          "option_strings": [
+            "--limit"
+          ],
+          "dest": "limit",
+          "nargs": null,
+          "type": "int",
+          "default": 8,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--category"
+          ],
+          "dest": "category",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by top-level category, for example 05-subagents or use-cases",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-type"
+          ],
+          "dest": "doc_type",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred document type, for example skill, subagent, use_case, catalog",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--tag"
+          ],
+          "dest": "tag",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred domain tag, for example construction_cost, statistics, governance",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--include-docs"
+          ],
+          "dest": "include_docs",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "Include reconstructed markdown documents for top hits",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-limit"
+          ],
+          "dest": "doc_limit",
+          "nargs": null,
+          "type": "int",
+          "default": 1,
+          "choices": null,
+          "required": false,
+          "help": "Maximum documents to include when --include-docs is set",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-chars"
+          ],
+          "dest": "doc_chars",
+          "nargs": null,
+          "type": "int",
+          "default": 12000,
+          "choices": null,
+          "required": false,
+          "help": "Maximum characters per included document",
+          "positional": false
+        }
+      ]
+    },
+    "ask": {
+      "help": "Return a structured context pack for a human or agent question",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [],
+          "dest": "question",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": true,
+          "help": "",
+          "positional": true
+        },
+        {
+          "option_strings": [
+            "--limit"
+          ],
+          "dest": "limit",
+          "nargs": null,
+          "type": "int",
+          "default": 8,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--category"
+          ],
+          "dest": "category",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by top-level category, for example 05-subagents or use-cases",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-type"
+          ],
+          "dest": "doc_type",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred document type, for example skill, subagent, use_case, catalog",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--tag"
+          ],
+          "dest": "tag",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred domain tag, for example construction_cost, statistics, governance",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--include-docs"
+          ],
+          "dest": "include_docs",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "Include reconstructed markdown documents for top hits",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-limit"
+          ],
+          "dest": "doc_limit",
+          "nargs": null,
+          "type": "int",
+          "default": 1,
+          "choices": null,
+          "required": false,
+          "help": "Maximum documents to include when --include-docs is set",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-chars"
+          ],
+          "dest": "doc_chars",
+          "nargs": null,
+          "type": "int",
+          "default": 12000,
+          "choices": null,
+          "required": false,
+          "help": "Maximum characters per included document",
+          "positional": false
+        }
+      ]
+    },
+    "answer": {
+      "help": "Generate a DeepSeek-synthesized answer from retrieved context",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [],
+          "dest": "question",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": true,
+          "help": "",
+          "positional": true
+        },
+        {
+          "option_strings": [
+            "--limit"
+          ],
+          "dest": "limit",
+          "nargs": null,
+          "type": "int",
+          "default": 8,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--source-limit"
+          ],
+          "dest": "source_limit",
+          "nargs": null,
+          "type": "int",
+          "default": 5,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--temperature"
+          ],
+          "dest": "temperature",
+          "nargs": null,
+          "type": "float",
+          "default": 0.2,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--max-tokens"
+          ],
+          "dest": "max_tokens",
+          "nargs": null,
+          "type": "int",
+          "default": 1200,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--timeout"
+          ],
+          "dest": "timeout",
+          "nargs": null,
+          "type": "int",
+          "default": 60,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--category"
+          ],
+          "dest": "category",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by top-level category, for example 05-subagents or use-cases",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-type"
+          ],
+          "dest": "doc_type",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred document type, for example skill, subagent, use_case, catalog",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--tag"
+          ],
+          "dest": "tag",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred domain tag, for example construction_cost, statistics, governance",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--include-docs"
+          ],
+          "dest": "include_docs",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "Include reconstructed markdown documents for top hits",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-limit"
+          ],
+          "dest": "doc_limit",
+          "nargs": null,
+          "type": "int",
+          "default": 1,
+          "choices": null,
+          "required": false,
+          "help": "Maximum documents to include when --include-docs is set",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-chars"
+          ],
+          "dest": "doc_chars",
+          "nargs": null,
+          "type": "int",
+          "default": 12000,
+          "choices": null,
+          "required": false,
+          "help": "Maximum characters per included document",
+          "positional": false
+        }
+      ]
+    },
+    "show": {
+      "help": "Show a chunk by id",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [],
+          "dest": "chunk_id",
+          "nargs": null,
+          "type": "int",
+          "default": null,
+          "choices": null,
+          "required": true,
+          "help": "",
+          "positional": true
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        }
+      ]
+    },
+    "recommend": {
+      "help": "Recommend relevant skills, agents, and source paths for an intent",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [],
+          "dest": "intent",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": true,
+          "help": "",
+          "positional": true
+        },
+        {
+          "option_strings": [
+            "--limit"
+          ],
+          "dest": "limit",
+          "nargs": null,
+          "type": "int",
+          "default": 6,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--category"
+          ],
+          "dest": "category",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by top-level category, for example 05-subagents or use-cases",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-type"
+          ],
+          "dest": "doc_type",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred document type, for example skill, subagent, use_case, catalog",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--tag"
+          ],
+          "dest": "tag",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred domain tag, for example construction_cost, statistics, governance",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--include-docs"
+          ],
+          "dest": "include_docs",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "Include reconstructed markdown documents for top hits",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-limit"
+          ],
+          "dest": "doc_limit",
+          "nargs": null,
+          "type": "int",
+          "default": 1,
+          "choices": null,
+          "required": false,
+          "help": "Maximum documents to include when --include-docs is set",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-chars"
+          ],
+          "dest": "doc_chars",
+          "nargs": null,
+          "type": "int",
+          "default": 12000,
+          "choices": null,
+          "required": false,
+          "help": "Maximum characters per included document",
+          "positional": false
+        }
+      ]
+    },
+    "docs": {
+      "help": "List indexed documents",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--limit"
+          ],
+          "dest": "limit",
+          "nargs": null,
+          "type": "int",
+          "default": 80,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--category"
+          ],
+          "dest": "category",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by top-level category, for example 05-subagents or use-cases",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--doc-type"
+          ],
+          "dest": "doc_type",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred document type, for example skill, subagent, use_case, catalog",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--tag"
+          ],
+          "dest": "tag",
+          "nargs": null,
+          "type": null,
+          "default": null,
+          "choices": null,
+          "required": false,
+          "help": "Filter by inferred domain tag, for example construction_cost, statistics, governance",
+          "positional": false
+        }
+      ]
+    },
+    "repl": {
+      "help": "Start an interactive human/agent query shell",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        }
+      ]
+    },
+    "stats": {
+      "help": "Show index statistics",
+      "options": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "type": null,
+          "default": "==SUPPRESS==",
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "positional": false
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "type": null,
+          "default": false,
+          "choices": null,
+          "required": false,
+          "help": "",
+          "positional": false
+        }
+      ]
+    }
+  }
+}

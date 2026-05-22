@@ -2,6 +2,8 @@
 
 > 多 Agent 协作设计模式全集。从这里选择适合你场景的架构模板。
 
+> **🔗 跨模块组合：** 每种模式都需要配合 [08-infrastructure](../08-infrastructure/_INDEX.md)（hooks/context/隔离）和 [09-agent-infra-catalog](../09-agent-infra-catalog/README.md)（治理/观测/路由）。完整组合速查表见 [../MANIFEST.md#cross-refs](../MANIFEST.md#cross-refs)。
+
 ---
 
 ## 模式选型速查

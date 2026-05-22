@@ -2,6 +2,8 @@
 
 > Claude Code Agent 的四大基础设施支柱：Hooks / Context Window / Tool Use MCP / Subagent Isolation。
 
+> **🔗 跨模块组合：** 这些组件是 [07-agent-design](../07-agent-design/_INDEX.md) 各模式的底层依赖。常见组合（哪种 pattern 配哪种 hook + context 策略）见 [../MANIFEST.md#cross-refs](../MANIFEST.md#cross-refs)。
+
 ---
 
 ## 四支柱概览

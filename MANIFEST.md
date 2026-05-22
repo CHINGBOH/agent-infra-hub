@@ -110,7 +110,7 @@
 | **DAG 任务依赖** | claude-swarm | 任务依赖图，有向无环图调度 | 有依赖的多步骤任务 |
 | **并行 Swarm (20-50)** | agent-farm | 分布式 agent + 锁协调 | 大规模并行任务 |
 | **9阶段质量门控** | metaswarm | 分阶段工作流 + 评估门控 | 高质量输出需求 |
-| **团队角色分工** | wshobson-agents | Lead/Impl/Review 三角色 | 代码开发团队模拟 |
+| **团队角色分工** | wshobson-agents（81 plugins，[二级路由 →](07-agent-design/wshobson-agents-INDEX.md)） | Lead/Impl/Review 三角色 | 代码开发团队模拟 |
 | **Git Worktree 隔离** | ccswarm | 每个 agent 独立 worktree | 并行代码修改无冲突 |
 | **CI/PR 全自动化** | agent-orchestrator | PR 评审 + 代码修复循环 | DevOps 自动化 |
 | **企业级 RAG+Swarm** | ruflo | Swarm + 向量检索 + 企业安全 | 知识密集型企业任务 |
@@ -230,6 +230,55 @@ python tools/agent_kb.py repl                         # 交互 shell
 ### 09-agent-infra-catalog/（候选引入库）
 
 [09-agent-infra-catalog/README.md](09-agent-infra-catalog/README.md) — 按编排/路由/观测/门控/skills 分类的候选仓库清单
+
+**已浅克隆到本地的候选源码**（`.gitignore` 已忽略，仅元数据入仓）：
+
+| 分类 | 仓库 | 用途 |
+|------|------|------|
+| awesome-indexes | [awesome-multi-agent-orchestrators/](09-agent-infra-catalog/awesome-indexes/awesome-multi-agent-orchestrators/) | 多 agent 编排框架综述 |
+| awesome-indexes | [awesome-ai-agent-governance/](09-agent-infra-catalog/awesome-indexes/awesome-ai-agent-governance/) | AI agent 治理资源 |
+| orchestrators | [agent-kit/](09-agent-infra-catalog/orchestrators/agent-kit/) | Inngest agent kit，事件驱动编排 |
+| orchestrators | [open-multi-agent/](09-agent-infra-catalog/orchestrators/open-multi-agent/) | 开放多 agent 框架 |
+| routing-gateways | [agentgateway/](09-agent-infra-catalog/routing-gateways/agentgateway/) | Agent 网关 + MCP/A2A proxy |
+| routing-gateways | [portkey-gateway/](09-agent-infra-catalog/routing-gateways/portkey-gateway/) | LLM 路由 + fallback |
+| governance-guardrails | [agent-governance-toolkit/](09-agent-infra-catalog/governance-guardrails/agent-governance-toolkit/) | Microsoft，policy + audit |
+| observability-hud | [claude-code-dashboard/](09-agent-infra-catalog/observability-hud/claude-code-dashboard/) | Statusline + hook telemetry HUD |
+| skill-systems | [agent-skills/](09-agent-infra-catalog/skill-systems/agent-skills/) | jscraik，skill runtime |
+| skill-systems | [oh-my-codex/](09-agent-infra-catalog/skill-systems/oh-my-codex/) | scalarian，skill 生态 |
+
+---
+
+---
+
+## 跨模块组合速查 {#cross-refs}
+
+> Agent 模式（07）↔ 基础设施（08）↔ 治理候选（09）的常见组合。
+
+| 你的 Agent 模式 | 应该搭配的 Hooks | Context 策略 | 隔离方式 | 治理 / 观测 |
+|------------------|------------------|--------------|----------|------------|
+| **大规模 swarm**（agent-farm / ccswarm） | [multi-agent-observability hooks](08-infrastructure/hooks/claude-code-hooks-multi-agent-observability/) | [token-optimizer](08-infrastructure/context-window/token-optimizer/) PreCompact 触发 | git worktree（ccswarm 内置） | [claude-code-dashboard](09-agent-infra-catalog/observability-hud/claude-code-dashboard/) |
+| **9 阶段门控**（metaswarm） | [hooks-mastery](08-infrastructure/hooks/claude-code-hooks-mastery/) PostToolUse 注入评估 | token-optimizer 分层压缩 | sub-agent-collective Hub-and-Spoke | [agent-governance-toolkit](09-agent-infra-catalog/governance-guardrails/agent-governance-toolkit/) |
+| **CI/PR 流水线**（agent-orchestrator） | hooks-mastery（Stop/Notification） | — | ECC（PR 内 sandbox） | wshobson `signed-audit-trails` |
+| **Hub-and-Spoke**（sub-agent-collective） | hooks-mastery PreToolUse 限流 | token-optimizer | 内置 | dashboard + multi-agent-observability |
+| **Agent-in-Agent**（claude-code-mcp） | PreToolUse 审计 | token-optimizer | MCP 层进程边界 | [agentgateway](09-agent-infra-catalog/routing-gateways/agentgateway/) (MCP proxy) |
+| **DAG 调度**（claude-swarm） | hooks-mastery（节点完成钩子） | — | — | [agent-kit](09-agent-infra-catalog/orchestrators/agent-kit/)（事件驱动同源对比） |
+| **代码团队**（wshobson-agents） | PostToolUse review hook | context-management plugin | — | wshobson `protect-mcp` / `comprehensive-review` |
+
+完整 plugin 二级路由：[07-agent-design/wshobson-agents-INDEX.md](07-agent-design/wshobson-agents-INDEX.md)
+
+---
+
+## Experimental APIs（实验性依赖警告） {#experimental-apis}
+
+> 仓库内多个 plugin / pattern 依赖**未稳定**的 Claude Code 实验性 API。引入前务必确认环境标志。
+
+| Flag / API | 启用方式 | 影响的组件 | 稳定性 |
+|------------|----------|------------|--------|
+| `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` | `.claude/settings.json` env 或 shell rc | • [wshobson `agent-teams` plugin](07-agent-design/wshobson-agents/plugins/agent-teams/)<br>• [hooks-multi-agent-observability](08-infrastructure/hooks/claude-code-hooks-multi-agent-observability/) §Agent Teams 章节<br>• [ECC token-optimization](08-infrastructure/subagent-isolation/ECC/docs/token-optimization.md)<br>• [academic-research-skills PERFORMANCE](04-research/academic-research-skills/docs/PERFORMANCE.md) | ⚠️ Research preview，无稳定文档 |
+| `TeamCreate` / `SendMessage` tools | 随 AGENT_TEAMS flag 暴露 | 同上 | ⚠️ 接口可能变动 |
+| MCP `code-review-graph` server | 需本地启动 MCP server | [Knowledge Graphs](#knowledge-graphs) 全部查询 | 🟡 本地工具，需自行部署 |
+
+**判断准则：** 如果你的目标场景**不要求**跨 session 持久的 manual team coordination，**不要**启用 `AGENT_TEAMS`——内置 `Agent` tool 直接 spawn subagent 已能满足并行需求（见 [academic-research-skills PERFORMANCE](04-research/academic-research-skills/docs/PERFORMANCE.md)）。
 
 ---
 
