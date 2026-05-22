@@ -370,6 +370,22 @@ def has_fts5(conn: sqlite3.Connection) -> bool:
         return False
 
 
+
+def open_index(db: Path) -> sqlite3.Connection | None:
+    if not db.exists():
+        print(f"index not found: {db}. Run `tools/agent_kb.py build --db {db}` first.", file=sys.stderr)
+        return None
+    conn = connect(db)
+    try:
+        conn.execute("SELECT 1 FROM metadata LIMIT 1")
+        conn.execute("SELECT 1 FROM documents LIMIT 1")
+        conn.execute("SELECT 1 FROM chunks LIMIT 1")
+    except sqlite3.Error:
+        conn.close()
+        print(f"index is missing required tables: {db}. Rebuild it with `tools/agent_kb.py build --db {db}`.", file=sys.stderr)
+        return None
+    return conn
+
 def init_db(conn: sqlite3.Connection) -> bool:
     fts = has_fts5(conn)
     conn.executescript(
@@ -518,7 +534,9 @@ def search_rows(conn: sqlite3.Connection, args: argparse.Namespace) -> list[sqli
 
 
 def command_search(args: argparse.Namespace) -> int:
-    conn = connect(Path(args.db))
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
     rows = search_rows(conn, args)
     data = [dict(row) for row in rows]
     print_json_or_text(data, args.json, search_text)
@@ -541,7 +559,9 @@ def search_text(rows: list[dict]) -> str:
 
 
 def command_show(args: argparse.Namespace) -> int:
-    conn = connect(Path(args.db))
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
     row = conn.execute(
         """
         SELECT c.id AS chunk_id, d.path, d.title, d.category, d.doc_type, d.tags,
@@ -560,7 +580,9 @@ def command_show(args: argparse.Namespace) -> int:
 
 
 def command_stats(args: argparse.Namespace) -> int:
-    conn = connect(Path(args.db))
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
     docs = conn.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
     chunks = conn.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
     by_category = [dict(r) for r in conn.execute("SELECT category, COUNT(*) AS documents FROM documents GROUP BY category ORDER BY category")]
@@ -581,7 +603,9 @@ def stats_text(data: dict) -> str:
 
 
 def command_ask(args: argparse.Namespace) -> int:
-    conn = connect(Path(args.db))
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
     domains = route_domains(args.question)
     rows = search_with_expansion(conn, args, domains)
     data = {
@@ -706,7 +730,9 @@ def recommendation_items(domains: Sequence[str]) -> list[dict]:
 
 
 def command_recommend(args: argparse.Namespace) -> int:
-    conn = connect(Path(args.db))
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
     domains = route_domains(args.intent)
     rows = search_with_expansion(conn, args, domains)
     data = {
@@ -738,7 +764,9 @@ def recommend_text(data: dict) -> str:
     return "\n".join(lines)
 
 def command_docs(args: argparse.Namespace) -> int:
-    conn = connect(Path(args.db))
+    conn = open_index(Path(args.db))
+    if conn is None:
+        return 2
     where, params = where_filters(args)
     sql = "SELECT path,title,category,doc_type,tags,size_bytes,mtime FROM documents d"
     if where:
