@@ -1,8 +1,10 @@
 # agent-infra-hub
 
+> **AI Agent 导航入口：[MANIFEST.md](MANIFEST.md)** | 机器可读索引：[catalog.json](catalog.json)
+
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~630 MB | 31 个仓库 | 9 个分类**
+**~630 MB | 38 个仓库 | 9 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -105,9 +107,21 @@ agent-infra-hub/
 │       ├── ECC/                       affaan-m — 82k★ Agent Harness
 │       └── claude-code-sub-agent-collective/ vanzan01 — Hub-and-Spoke
 │
-└── 09-agent-infra-catalog/    Agent 架构基础设施候选库
-    ├── catalog.yaml                   awesome / 编排 / 路由 / 门控 / 观测 / skills 清单
-    └── README.md                      分类法与导入策略
+├── 09-agent-infra-catalog/    Agent 架构基础设施候选库
+│   ├── catalog.yaml                   awesome / 编排 / 路由 / 门控 / 观测 / skills 清单
+│   └── README.md                      分类法与导入策略
+│
+├── skill-research/            Skill 系统深度研究
+│   ├── _INDEX.md                      ← Skill 系统导航（优先读）
+│   ├── 11-anthropic-personal-skills/  Anthropic 官方 9个 Personal Skills
+│   ├── 05-examples/superpowers-skills/ 工程级 Skill 实例
+│   ├── 04-writing-guide/              Skill 写法最佳实践
+│   ├── 12-third-party-repos/          外部知识图谱（7仓库）
+│   └── build-mcp-{server,app,mcpb}/   MCP 构建技能集
+│
+├── MANIFEST.md                AI Agent 导航入口（AI 首读）
+├── catalog.json               机器可读资源索引
+└── tools/agent_kb.py          本地知识库 CLI
 ```
 
 ---
@@ -565,4 +579,42 @@ find /home/l/projects/agent-infra-hub -maxdepth 3 -name ".git" -type d \
 
 ---
 
-*最后更新：2026-05-22 | 21 仓库 | 维护：survey-analysis-platform 项目组*
+---
+
+## Skill 研究资料库
+
+路径：[skill-research/](skill-research/)  
+导航：[skill-research/_INDEX.md](skill-research/_INDEX.md)
+
+涵盖 Claude Code Skill 系统完整研究资料：
+
+| 目录 | 内容 |
+|------|------|
+| [11-anthropic-personal-skills/](skill-research/11-anthropic-personal-skills/) | Anthropic 官方 9 个 Personal Skills 完整文档 |
+| [05-examples/superpowers-skills/](skill-research/05-examples/superpowers-skills/) | 工程级 Skill 实例（brainstorming/TDD/debugging） |
+| [04-writing-guide/](skill-research/04-writing-guide/) | Skill 写法最佳实践（Anthropic 官方 + superpowers） |
+| [12-third-party-repos/](skill-research/12-third-party-repos/) | 已索引外部仓库知识图谱（7个） |
+| [build-mcp-server/](skill-research/build-mcp-server/) | MCP Server 开发技能集 |
+| [build-mcp-app/](skill-research/build-mcp-app/) | MCP App UI 组件技能集 |
+
+---
+
+## 外部知识图谱（code-review-graph 索引）
+
+路径：[skill-research/12-third-party-repos/README.md](skill-research/12-third-party-repos/README.md)
+
+已在本机建立 code-review-graph 索引的 7 个外部仓库，通过 `repo_root` 参数查询：
+
+| 仓库 | 领域 | repo_root |
+|------|------|-----------|
+| yt-dlp | 视频下载/网络/格式处理 | `/home/l/projects/03_third-party-sources/yt-dlp` |
+| FinceptTerminal | 金融终端/TUI/实时数据 | `/home/l/projects/03_third-party-sources/FinceptTerminal` |
+| the-book-of-secret-knowledge | DevOps/安全/工具参考 | `/home/l/projects/03_third-party-sources/the-book-of-secret-knowledge` |
+| odoo 17.0 | ERP/ORM/多模块框架 | `/home/l/projects/03_third-party-sources/odoo` |
+| chrome-devtools-mcp | MCP Server/Chrome CDP | `/home/l/projects/03_third-party-sources/chrome-devtools-mcp` |
+| ai-engineering-from-scratch | AI 工程/RAG/Agent | `/home/l/projects/03_third-party-sources/ai-engineering-from-scratch` |
+| codegraph | 代码图谱/AST/依赖分析 | `/home/l/projects/03_third-party-sources/codegraph` |
+
+---
+
+*最后更新：2026-05-23 | 38 仓库 + 7 知识图谱 | AI 写代码轮子库*
