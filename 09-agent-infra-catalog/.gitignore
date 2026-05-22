@@ -1,0 +1,8 @@
+# Locally cloned third-party repositories. Keep the catalog metadata in git,
+# but do not vendor these repositories into agent-infra-hub.
+/awesome-indexes/
+/orchestrators/
+/routing-gateways/
+/governance-guardrails/
+/observability-hud/
+/skill-systems/

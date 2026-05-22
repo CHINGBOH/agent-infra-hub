@@ -1,0 +1,319 @@
+schema_version: 1
+generated_on: "2026-05-22"
+purpose: "Candidate GitHub repositories for expanding agent-infra-hub into an Agent OS / Agent Infrastructure catalog."
+
+taxonomy:
+  categories:
+    awesome-indexes: "Curated lists for discovering agent infrastructure projects."
+    orchestrators: "Multi-agent orchestration, DAG planning, workers, workflow runtimes."
+    routing-gateways: "LLM/agent gateways, model routing, fallbacks, MCP/A2A proxies."
+    governance-guardrails: "Policy enforcement, quality gates, sandboxing, audit trails."
+    observability-hud: "Dashboards, HUDs, status lines, hook telemetry, cost tracking."
+    skill-systems: "Skills, plugins, capability routing, generated handles, runtime projections."
+  artifact_types:
+    - awesome_index
+    - orchestrator
+    - skill_system
+    - hook_pack
+    - hud
+    - dashboard
+    - gateway
+    - router
+    - guardrail
+    - policy_engine
+    - sandbox
+    - audit_log
+    - mcp_gateway
+  agent_layers:
+    - discovery
+    - capability
+    - orchestration
+    - routing
+    - governance
+    - observability
+    - context_memory
+    - tool_runtime
+    - subagent_isolation
+
+repositories:
+  - name: Agent-Analytics/awesome-multi-agent-orchestrators
+    url: https://github.com/Agent-Analytics/awesome-multi-agent-orchestrators
+    category: awesome-indexes
+    artifact_types: [awesome_index]
+    agent_layers: [discovery, orchestration, governance]
+    capabilities: [multi_agent_discovery, governance_discovery, coding_agent_workspaces]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/awesome-indexes/awesome-multi-agent-orchestrators
+    notes: "Index for multi-agent orchestrators, coding-agent workspaces, agent OS projects, and governance layers."
+
+  - name: hesreallyhim/awesome-claude-code
+    url: https://github.com/hesreallyhim/awesome-claude-code
+    category: awesome-indexes
+    artifact_types: [awesome_index]
+    agent_layers: [discovery, capability, tool_runtime, observability]
+    capabilities: [claude_code_skills, hooks, slash_commands, orchestrators, mcp_servers]
+    priority: high
+    import_mode: already_present
+    local_path: 06-catalogs/awesome-claude-code
+    notes: "Already present; keep as a primary Claude Code ecosystem index."
+
+  - name: subinium/awesome-claude-code
+    url: https://github.com/subinium/awesome-claude-code
+    category: awesome-indexes
+    artifact_types: [awesome_index]
+    agent_layers: [discovery, capability, observability, tool_runtime]
+    capabilities: [claude_code_tools, mcp_ecosystem, monitoring, analytics]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Alternate Claude Code index with MCP, monitoring, analytics, and ecosystem links."
+
+  - name: systempromptio/awesome-ai-agent-governance
+    url: https://github.com/systempromptio/awesome-ai-agent-governance
+    category: awesome-indexes
+    artifact_types: [awesome_index]
+    agent_layers: [discovery, governance]
+    capabilities: [policy_enforcement_discovery, audit_discovery, access_control_discovery, cost_control_discovery]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/awesome-indexes/awesome-ai-agent-governance
+    notes: "Governance-focused index for production agent controls."
+
+  - name: junminhong/awesome-agent-skills
+    url: https://github.com/junminhong/awesome-agent-skills
+    category: awesome-indexes
+    artifact_types: [awesome_index]
+    agent_layers: [discovery, capability]
+    capabilities: [agent_skills_discovery, codex_skills, claude_code_skills, kiro_cli_skills]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Skills index across Claude Code, Codex, and Kiro CLI."
+
+  - name: dsifry/metaswarm
+    url: https://github.com/dsifry/metaswarm
+    category: orchestrators
+    artifact_types: [orchestrator, skill_system, guardrail]
+    agent_layers: [orchestration, governance, capability]
+    capabilities: [nine_phase_sdlc, quality_gate, tdd_enforcement, adversarial_review, recursive_orchestration]
+    priority: high
+    import_mode: already_present
+    local_path: 07-agent-design/metaswarm
+    notes: "Core reference for quality-gated multi-agent SDLC."
+
+  - name: inngest/agent-kit
+    url: https://github.com/inngest/agent-kit
+    category: orchestrators
+    artifact_types: [orchestrator, router, mcp_gateway]
+    agent_layers: [orchestration, routing, tool_runtime]
+    capabilities: [deterministic_routing, state_based_routing, mcp_tools, tracing, fault_tolerant_workflows]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/orchestrators/agent-kit
+    notes: "TypeScript framework for multi-agent networks with deterministic routing and MCP tooling."
+
+  - name: open-multi-agent/open-multi-agent
+    url: https://github.com/open-multi-agent/open-multi-agent
+    category: orchestrators
+    artifact_types: [orchestrator]
+    agent_layers: [orchestration, routing]
+    capabilities: [goal_to_task_dag, auto_parallelization, coordinator_agent, synthesis]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/orchestrators/open-multi-agent
+    notes: "TypeScript-native goal-to-DAG multi-agent orchestration."
+
+  - name: hupe1980/agentmesh
+    url: https://github.com/hupe1980/agentmesh
+    category: orchestrators
+    artifact_types: [orchestrator, router, guardrail]
+    agent_layers: [orchestration, routing, governance, observability]
+    capabilities: [pregel_bsp, parallel_graph_execution, supervisor_routing, content_filtering, pii_protection]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Go framework with BSP graph execution, supervisor agents, guardrails, and observability."
+
+  - name: voocel/mas
+    url: https://github.com/voocel/mas
+    category: orchestrators
+    artifact_types: [orchestrator, router]
+    agent_layers: [orchestration, routing]
+    capabilities: [go_multi_agent_runtime, workflow_orchestration, routing]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Lightweight Go multi-agent framework."
+
+  - name: rundiffusion/RunDiffusion-Agents
+    url: https://github.com/rundiffusion/RunDiffusion-Agents
+    category: orchestrators
+    artifact_types: [orchestrator, dashboard, sandbox]
+    agent_layers: [orchestration, governance, subagent_isolation, observability]
+    capabilities: [agent_farm_control_plane, docker_isolation, yaml_control_plane, fleet_management]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Agent fleet control plane for OpenClaw, Codex, Claude, Gemini, and related agents."
+
+  - name: Portkey-AI/gateway
+    url: https://github.com/portkey-ai/gateway
+    category: routing-gateways
+    artifact_types: [gateway, router, guardrail, mcp_gateway]
+    agent_layers: [routing, governance, tool_runtime, observability]
+    capabilities: [model_routing, fallbacks, retries, load_balancing, guardrails, mcp_gateway]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/routing-gateways/portkey-gateway
+    notes: "Production LLM gateway for routing, reliability, and guardrails."
+
+  - name: agentgateway/agentgateway
+    url: https://github.com/agentgateway/agentgateway
+    category: routing-gateways
+    artifact_types: [gateway, router, mcp_gateway, policy_engine]
+    agent_layers: [routing, governance, observability, tool_runtime]
+    capabilities: [mcp_proxy, a2a_proxy, rbac, cel_policy, rate_limiting, opentelemetry]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/routing-gateways/agentgateway
+    notes: "Agentic proxy for agent-to-LLM, agent-to-tool, and agent-to-agent traffic."
+
+  - name: trylonai/gateway
+    url: https://github.com/trylonai/gateway
+    category: routing-gateways
+    artifact_types: [gateway, guardrail, policy_engine]
+    agent_layers: [routing, governance]
+    capabilities: [llm_firewall, request_policy, response_policy, local_sanitization, blocking]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Self-hosted LLM firewall and proxy."
+
+  - name: microsoft/agent-governance-toolkit
+    url: https://github.com/microsoft/agent-governance-toolkit
+    category: governance-guardrails
+    artifact_types: [policy_engine, sandbox, audit_log, guardrail, mcp_gateway]
+    agent_layers: [governance, tool_runtime, subagent_isolation, observability]
+    capabilities: [deterministic_policy_enforcement, zero_trust_identity, execution_sandboxing, owasp_agentic_top_10, audit_log, mcp_security_scanner]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/governance-guardrails/agent-governance-toolkit
+    notes: "Primary candidate for runtime action governance, policy-as-code, and audit."
+
+  - name: PAXECT-Interface/open-agentic
+    url: https://github.com/PAXECT-Interface/open-agentic
+    category: governance-guardrails
+    artifact_types: [orchestrator, policy_engine, audit_log, guardrail]
+    agent_layers: [orchestration, governance]
+    capabilities: [fail_closed_orchestration, evidence_based_verification, tamper_evident_audit, policy_bundle]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Useful reference for evidence chains and fail-closed execution."
+
+  - name: rulehub/rulehub
+    url: https://github.com/rulehub/rulehub
+    category: governance-guardrails
+    artifact_types: [policy_engine, guardrail, audit_log]
+    agent_layers: [governance]
+    capabilities: [policy_as_code, ai_pipeline_audit, llm_guardrails, compliance_mapping]
+    priority: low
+    import_mode: metadata_first
+    notes: "Policy-as-code direction; keep as a governance reference."
+
+  - name: ek33450505/claude-code-dashboard
+    url: https://github.com/ek33450505/claude-code-dashboard
+    category: observability-hud
+    artifact_types: [dashboard, hook_pack]
+    agent_layers: [observability, context_memory, governance]
+    capabilities: [hook_events, session_analytics, token_cost_tracking, sqlite_explorer, live_sse]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/observability-hud/claude-code-dashboard
+    notes: "Local-first Claude Code observability UI over hooks and SQLite."
+
+  - name: jstuart0/agentpulse
+    url: https://github.com/jstuart0/agentpulse
+    category: observability-hud
+    artifact_types: [dashboard, orchestrator, hook_pack]
+    agent_layers: [observability, orchestration, routing]
+    capabilities: [claude_codex_monitoring, session_history, hook_events, host_routing, supervisor]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Dashboard and command center for Claude Code and Codex sessions."
+
+  - name: FlorianBruniaux/ccboard
+    url: https://github.com/FlorianBruniaux/ccboard
+    category: observability-hud
+    artifact_types: [dashboard, hud, hook_pack]
+    agent_layers: [observability, tool_runtime]
+    capabilities: [tui_dashboard, web_dashboard, cost_tracking, config_management, hooks_agents_mcp_monitoring]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Rust TUI/Web dashboard for Claude Code sessions, hooks, agents, and MCP servers."
+
+  - name: sirmalloc/ccstatusline
+    url: https://github.com/sirmalloc/ccstatusline
+    category: observability-hud
+    artifact_types: [hud]
+    agent_layers: [observability]
+    capabilities: [statusline, model_info, git_branch, token_usage, subagent_aware_speed]
+    priority: low
+    import_mode: metadata_first
+    notes: "Claude Code statusline reference."
+
+  - name: leeguooooo/claude-code-usage-bar
+    url: https://github.com/leeguooooo/claude-code-usage-bar
+    category: observability-hud
+    artifact_types: [hud]
+    agent_layers: [observability, context_memory]
+    capabilities: [rate_limit_usage, reset_countdown, context_window, prompt_cache_age, session_cost]
+    priority: low
+    import_mode: metadata_first
+    notes: "Compact statusLine for Claude Code usage and context signals."
+
+  - name: webdevtodayjason/sub-agents
+    url: https://github.com/webdevtodayjason/sub-agents
+    category: observability-hud
+    artifact_types: [dashboard, hook_pack, orchestrator]
+    agent_layers: [orchestration, observability, capability]
+    capabilities: [subagent_manager, hook_system, slash_commands, agent_state, dashboard]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Claude Code sub-agent manager with hooks, custom commands, and web dashboard."
+
+  - name: jscraik/Agent-Skills
+    url: https://github.com/jscraik/Agent-Skills
+    category: skill-systems
+    artifact_types: [skill_system, router]
+    agent_layers: [capability, routing, governance]
+    capabilities: [capability_control_plane, root_routers, generated_handles, runtime_projection, quality_validation]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/skill-systems/agent-skills
+    notes: "Strong reference for structuring skills as a governed capability layer."
+
+  - name: OneWave-AI/claude-skills
+    url: https://github.com/onewave-ai/claude-skills
+    category: skill-systems
+    artifact_types: [skill_system]
+    agent_layers: [capability]
+    capabilities: [production_skills, business_automation, content_creation, development_workflows]
+    priority: medium
+    import_mode: metadata_first
+    notes: "Large production-ready Claude Code skills collection."
+
+  - name: scalarian/oh-my-codex
+    url: https://github.com/scalarian/oh-my-codex
+    category: skill-systems
+    artifact_types: [skill_system, orchestrator, hook_pack, hud, mcp_gateway]
+    agent_layers: [capability, orchestration, observability, context_memory, tool_runtime]
+    capabilities: [codex_orchestration, durable_state, team_execution, hooks, hud, memory, mcp_tools]
+    priority: high
+    import_mode: cloned
+    local_path: 09-agent-infra-catalog/skill-systems/oh-my-codex
+    notes: "Codex-native orchestration layer with skills, hooks, HUD, MCP, memory, and teams."
+
+  - name: Gitmaxd/deepagents-cli-codex-skill
+    url: https://github.com/Gitmaxd/deepagents-cli-codex-skill
+    category: skill-systems
+    artifact_types: [skill_system]
+    agent_layers: [capability]
+    capabilities: [codex_skill, deep_agents_cli, structured_docs, sdk_customization]
+    priority: low
+    import_mode: metadata_first
+    notes: "Example of a Codex skill wrapping another agent CLI surface."

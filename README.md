@@ -2,7 +2,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~630 MB | 31 个仓库 | 8 个分类**
+**~630 MB | 31 个仓库 | 9 个分类**
 
 ```
 LLM（CPU）
@@ -40,13 +40,17 @@ LLM（CPU）
 | **Boomerang 任务拆分 MCP 模式** | claude-code-mcp-enhanced | [→](#8-infrastructure-基础设施四大支柱) |
 | **Agent Harness 完整系统（82k★）** | ECC | [→](#8-infrastructure-基础设施四大支柱) |
 | **Hub-and-Spoke 上下文隔离架构** | sub-agent-collective | [→](#8-infrastructure-基础设施四大支柱) |
+| **更多 Agent 架构基础设施候选仓库** | 09-agent-infra-catalog | [→](#9-agent-infra-catalog-候选库) |
+| **统计分析 Agent 组装路径** | use-cases/statistical-analysis-agent.md | [→](use-cases/statistical-analysis-agent.md) |
+| **建筑造价知识库 Agent 组装路径** | use-cases/construction-cost-knowledge-base-agent.md | [→](use-cases/construction-cost-knowledge-base-agent.md) |
+| **Agent 查询可用性审计** | docs/audits/agent-query-readiness.md | [→](docs/audits/agent-query-readiness.md) |
 
 ---
 
 ## 目录结构
 
 ```
-skills-hub/
+agent-infra-hub/
 ├── 01-data-analysis/          数据分析管道
 │   ├── claude-data-analysis/          liangdabiao — 数据分析 Agent
 │   └── claude-data-analysis-ultra/    liangdabiao — 进阶 12 技能版
@@ -84,20 +88,24 @@ skills-hub/
 │   ├── agent-orchestrator/            ComposioHQ — CI/PR 全自动化
 │   └── ruflo/                         ruvnet — 企业级 Swarm + RAG
 │
-└── 08-infrastructure/         基础设施四大支柱（★ 新增）
-    ├── hooks/                         中断系统
-    │   ├── claude-code-hooks-mastery/ disler — 13 事件完整实现 + TTS + 安全
-    │   ├── claude-code-hooks-multi-agent-observability/ disler — 多 Agent 监控
-    │   └── claude-code-hooks/         karanb192 — 即用 hooks 集合
-    ├── context-window/                内存管理
-    │   └── token-optimizer/           alexgreensh — Ghost Token + 5层压缩
-    ├── tool-use-mcp/                  系统调用层
-    │   ├── claude-code-mcp/           steipete — agent-in-agent MCP
-    │   ├── claude-code-mcp-enhanced/  grahama1970 — Boomerang 模式
-    │   └── claude-code-everything/    wesammustafa — 全栈实战手册
-    └── subagent-isolation/            进程隔离
-        ├── ECC/                       affaan-m — 82k★ Agent Harness
-        └── claude-code-sub-agent-collective/ vanzan01 — Hub-and-Spoke
+├── 08-infrastructure/         基础设施四大支柱（★ 新增）
+│   ├── hooks/                         中断系统
+│   │   ├── claude-code-hooks-mastery/ disler — 13 事件完整实现 + TTS + 安全
+│   │   ├── claude-code-hooks-multi-agent-observability/ disler — 多 Agent 监控
+│   │   └── claude-code-hooks/         karanb192 — 即用 hooks 集合
+│   ├── context-window/                内存管理
+│   │   └── token-optimizer/           alexgreensh — Ghost Token + 5层压缩
+│   ├── tool-use-mcp/                  系统调用层
+│   │   ├── claude-code-mcp/           steipete — agent-in-agent MCP
+│   │   ├── claude-code-mcp-enhanced/  grahama1970 — Boomerang 模式
+│   │   └── claude-code-everything/    wesammustafa — 全栈实战手册
+│   └── subagent-isolation/            进程隔离
+│       ├── ECC/                       affaan-m — 82k★ Agent Harness
+│       └── claude-code-sub-agent-collective/ vanzan01 — Hub-and-Spoke
+│
+└── 09-agent-infra-catalog/    Agent 架构基础设施候选库
+    ├── catalog.yaml                   awesome / 编排 / 路由 / 门控 / 观测 / skills 清单
+    └── README.md                      分类法与导入策略
 ```
 
 ---
@@ -426,7 +434,7 @@ bash install-agents.sh
 cd 02-r-quarto/posit-dev-skills && git pull
 
 # 批量更新所有仓库
-find /home/l/projects/skills-hub -name ".git" -maxdepth 3 \
+find /home/l/projects/agent-infra-hub -name ".git" -maxdepth 3 \
   -exec sh -c 'cd "$(dirname "{}")" && git pull --ff-only 2>&1 | grep -v "Already"' \;
 ```
 
@@ -471,6 +479,39 @@ Dive-into-Claude-Code/README_zh.md（10 min）
 
 ---
 
+
+## 9. agent-infra-catalog — 候选库
+
+> 详细清单见 [09-agent-infra-catalog/catalog.yaml](09-agent-infra-catalog/catalog.yaml)
+
+用于继续扩展本仓库的 GitHub 候选清单，采用 **metadata first** 策略：先结构化记录仓库 URL、分类、能力、优先级和导入模式，再决定是否 clone 源码。
+
+**覆盖分类：**
+
+| 分类 | 典型内容 |
+|------|----------|
+| `awesome-indexes` | agent / skills / governance / Claude Code 索引 |
+| `orchestrators` | 多 Agent 编排、DAG、worker pool、workflow runtime |
+| `routing-gateways` | LLM gateway、模型路由、fallback、MCP/A2A proxy |
+| `governance-guardrails` | policy enforcement、sandbox、audit、quality gate |
+| `observability-hud` | dashboard、HUD、statusline、hook telemetry |
+| `skill-systems` | skills、plugin、capability routing、runtime projection |
+
+**优先候选：**
+
+| 仓库 | 方向 |
+|------|------|
+| `Agent-Analytics/awesome-multi-agent-orchestrators` | 多 Agent 编排索引 |
+| `microsoft/agent-governance-toolkit` | Runtime governance / policy / sandbox |
+| `agentgateway/agentgateway` | MCP/A2A agentic proxy |
+| `inngest/agent-kit` | TypeScript deterministic routing |
+| `open-multi-agent/open-multi-agent` | goal → task DAG |
+| `jscraik/Agent-Skills` | skills capability control plane |
+| `ek33450505/claude-code-dashboard` | hooks + sessions + SQLite 观测 |
+| `scalarian/oh-my-codex` | Codex skills / hooks / HUD / MCP |
+
+---
+
 ## 与 survey-analysis-platform 的完整对应关系
 
 ```
@@ -496,7 +537,7 @@ app/tools   (反幻觉核验)        ← ClaudeR 审计协议           + metasw
 ## 批量更新所有仓库
 
 ```bash
-find /home/l/projects/skills-hub -maxdepth 3 -name ".git" -type d \
+find /home/l/projects/agent-infra-hub -maxdepth 3 -name ".git" -type d \
   | while read g; do
       d=$(dirname "$g")
       echo "=== $(basename $d) ==="
