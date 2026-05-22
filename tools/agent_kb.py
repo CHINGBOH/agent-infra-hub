@@ -795,6 +795,104 @@ def print_json_or_text(data, as_json: bool, text_fn=None) -> None:
             print(data)
 
 
+REPL_HELP = """Commands:
+  <question>                  Ask by default and return a context pack
+  ask <question>              Ask a question
+  search <query>              Search indexed chunks
+  recommend <intent>          Recommend skills, agents, and source paths
+  show <chunk_id>             Show a source chunk
+  docs [filters]              List indexed docs, e.g. docs --doc-type use_case
+  stats                       Show index stats
+  help                        Show this help
+  exit | quit | q             Leave the REPL
+
+Common filters for ask/search/recommend/docs:
+  --limit N
+  --category CATEGORY
+  --doc-type TYPE
+  --tag TAG
+  --json
+"""
+
+
+def split_repl_line(line: str) -> list[str]:
+    try:
+        import shlex
+        return shlex.split(line)
+    except ValueError as exc:
+        print(f"parse error: {exc}", file=sys.stderr)
+        return []
+
+
+def split_text_command(tokens: list[str]) -> tuple[str, list[str]]:
+    text_parts: list[str] = []
+    options: list[str] = []
+    value_options = {"--limit", "--category", "--doc-type", "--tag"}
+    i = 0
+    while i < len(tokens):
+        token = tokens[i]
+        if token.startswith("--"):
+            options.append(token)
+            if token in value_options and i + 1 < len(tokens):
+                i += 1
+                options.append(tokens[i])
+        else:
+            text_parts.append(token)
+        i += 1
+    return " ".join(text_parts).strip(), options
+
+
+def repl_command_args(db: str, words: list[str]) -> list[str] | None:
+    if not words:
+        return None
+    command = words[0]
+    if command in {"exit", "quit", "q"}:
+        return ["__exit__"]
+    if command in {"help", "?"}:
+        return ["__help__"]
+    if command in {"ask", "search", "recommend"}:
+        text, options = split_text_command(words[1:])
+        if not text:
+            print(f"{command} requires text", file=sys.stderr)
+            return None
+        return ["--db", db, command, text, *options]
+    if command in {"show", "docs", "stats"}:
+        return ["--db", db, *words]
+    text, options = split_text_command(words)
+    return ["--db", db, "ask", text, *options]
+
+
+def command_repl(args: argparse.Namespace) -> int:
+    print("agent-kb interactive mode. Type `help` for commands, `exit` to quit.")
+    print(f"db: {args.db}")
+    while True:
+        try:
+            line = input("agent-kb> ").strip()
+        except EOFError:
+            print()
+            return 0
+        except KeyboardInterrupt:
+            print("\nUse `exit` to quit.")
+            continue
+        if not line:
+            continue
+        words = split_repl_line(line)
+        command_args = repl_command_args(args.db, words)
+        if command_args is None:
+            continue
+        if command_args == ["__exit__"]:
+            return 0
+        if command_args == ["__help__"]:
+            print(REPL_HELP)
+            continue
+        try:
+            code = main(command_args)
+        except SystemExit as exc:
+            code = int(exc.code or 0) if isinstance(exc.code, int) else 1
+        if code:
+            print(f"command exited with code {code}", file=sys.stderr)
+    return 0
+
 def add_common_filters(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--category", help="Filter by top-level category, for example 05-subagents or use-cases")
     parser.add_argument("--doc-type", help="Filter by inferred document type, for example skill, subagent, use_case, catalog")
@@ -844,6 +942,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     p.add_argument("--json", action="store_true")
     add_common_filters(p)
     p.set_defaults(func=command_docs)
+
+
+    p = sub.add_parser("repl", help="Start an interactive human/agent query shell")
+    p.set_defaults(func=command_repl)
 
     p = sub.add_parser("stats", help="Show index statistics")
     p.add_argument("--json", action="store_true")

@@ -2,6 +2,28 @@
 
 `tools/agent_kb.py` builds and queries a local knowledge base for this repository. It is designed for both humans and agents: human commands print concise text, while `--json` returns structured context packs.
 
+## Interactive Mode
+
+Start the interactive shell:
+
+```bash
+./tools/agent_kb.py repl
+```
+
+Inside the shell:
+
+```text
+agent-kb> 我要做建筑造价知识库 agent，需要 Milvus 和知识图谱吗？
+agent-kb> recommend design the Agent KB CLI MCP interface
+agent-kb> search statistical analysis agent --limit 3
+agent-kb> show 223521
+agent-kb> docs --doc-type use_case
+agent-kb> stats
+agent-kb> exit
+```
+
+A line without a command is treated as `ask <question>`. Use `help` inside the shell for the command list.
+
 ## Build
 
 ```bash
