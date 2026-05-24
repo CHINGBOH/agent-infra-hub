@@ -4,7 +4,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~3.9 GB | 72 个仓库 | 15 个分类 | 7 个知识图谱**
+**~5.0 GB | 82 个仓库 | 17 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -64,6 +64,10 @@ LLM（CPU）
 | 🆕 **异步基础设施 3 明星（temporal/nats/cua）** | 14-async-infra/ | [→](14-async-infra/) |
 | 🆕 **LLM 可观测 3 明星（langfuse/phoenix/openllmetry）** | 15-observability/ | [→](15-observability/) |
 | 🆕 **Python+异步+可观测分析（AGENTS.md/CLAUDE.md 趋势统计）** | 2026-05-25-python-infra-obs-analysis.md | [→](09-agent-infra-catalog/2026-05-25-python-infra-obs-analysis.md) |
+| 🆕 **50 → 59 模块（含 RAG 检索 + 评测）** | BEST-OF-STACK.md §K/L | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
+| 🆕 **RAG 6 明星（ragflow/llama_index/haystack/graphrag/LightRAG/FlashRAG）** | 16-rag-stack/ | [→](16-rag-stack/) |
+| 🆕 **评测 4 明星（ragas/lm-eval/BFCL/opencompass）** | 17-evaluation/ | [→](17-evaluation/) |
+| 🆕 **RAG + Evaluation 分析（含 4 种 RAG 组合）** | 2026-05-25-rag-eval-analysis.md | [→](09-agent-infra-catalog/2026-05-25-rag-eval-analysis.md) |
 
 ---
 

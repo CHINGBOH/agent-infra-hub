@@ -6,7 +6,7 @@
 
 ---
 
-## 🏗️ 全栈分 10 层 50 个模块
+## 🏗️ 全栈分 12 层 59 个模块
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -492,6 +492,71 @@
 | | 仓库 | 文件 | 卖点 |
 |---|---|---|---|
 | 🥇 | **traceloop/openllmetry** | `packages/opentelemetry-instrumentation-*/` × **31 个** | 覆盖几乎所有 Python LLM 框架（anthropic / openai / langchain / llamaindex / crewai / agno / mcp / 8 个向量 DB）；30 行代码加观测 |
+
+---
+
+## 🔍 K. RAG / 检索增强（5 个模块，🆕 2026-05-25）
+
+### K1. 文档解析
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **infiniflow/ragflow** | `deepdoc/parser/` + `deepdoc/vision/` | 国内最完整工业级文档管线：pdf/docx/excel/ppt/html/md/json/audio + OCR + 版面分析（表格/公式/图片） |
+| 🥈 | unstructured-io/unstructured | — | 国外主流但层次更浅 |
+
+### K2. RAG 框架（最大生态）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **run-llama/llama_index** | `llama-index-integrations/` × **29 类** | agent/embeddings/llms/graph_rag/memory/observability/readers/postprocessor/vector_stores 全覆盖 |
+| 🥈 | deepset-ai/haystack | `haystack/components/` | Pipeline DAG + 强类型 component；AGENTS.md+CLAUDE.md |
+
+### K3. 知识图谱 RAG（学术 vs 工业）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **microsoft/graphrag** | 570 py | 工业实现：实体提取 → community 聚类 → 多跳问答 |
+| 🥈 | HKUDS/LightRAG | 284 py | 港大极简实现，适合学习 |
+
+### K4. RAG 算法基线
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **RUC-NLPIR/FlashRAG** | 86 py | 16 种 RAG 算法对照（人大），学术研究首选 |
+
+### K5. 一站式 RAG 平台
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **infiniflow/ragflow** | `agent/canvas.py` + `rag/` + `sandbox/` | 文档解析 + 可视化 agent + 沙箱，单仓库交付 |
+
+---
+
+## 📊 L. Evaluation / 评测（4 个模块，🆕 2026-05-25）
+
+### L1. RAG 评测（事实标准）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **explodinggradients/ragas** | `src/ragas/metrics/` | faithfulness / answer_relevancy / context_precision / context_recall；LLM-as-Judge 骨架可直接套 |
+
+### L2. Tool-use / Function-calling 评测
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **ShishirPatil/gorilla** | `berkeley-function-call-leaderboard/` | BFCL 五大类：simple / parallel / multi-turn / live / hallucination；agent 上线前必跑 |
+
+### L3. 通用 LLM 评测
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **EleutherAI/lm-evaluation-harness** | `lm_eval/tasks/` | HF Open LLM Leaderboard 引擎；60+ benchmark；yaml+py 注册新 task |
+
+### L4. 中文 LLM 评测
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **open-compass/opencompass** | `configs/datasets/` | 上海 AI Lab；C-Eval/CMMLU/MMLU-CN 等；模型↔数据集↔评测器三层解耦 |
 
 ---
 
