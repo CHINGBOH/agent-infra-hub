@@ -4,7 +4,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~630 MB | 38 个仓库 | 9 个分类 | 7 个知识图谱**
+**~664 MB | 41 个仓库 | 9 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -48,6 +48,10 @@ LLM（CPU）
 | **Agent 查询可用性审计** | docs/audits/agent-query-readiness.md | [→](docs/audits/agent-query-readiness.md) |
 | **本地知识库 CLI** | tools/agent_kb.py | [→](docs/cli/agent-kb-cli.md) |
 | **Agent KB CLI 架构与 skill 选择** | docs/architecture/agent-kb-cli-agent-skill-selection.md | [→](docs/architecture/agent-kb-cli-agent-skill-selection.md) |
+| 🆕 **22 模块最优 Agent 拼装表** | 09-agent-infra-catalog/BEST-OF-STACK.md | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
+| 🆕 **持久化记忆 + 混合检索（53 MCP / 12 hooks / 0 DB）** | agentmemory | [→](08-infrastructure/agentmemory/) |
+| 🆕 **138 科学 SKILL.md（17 个学科领域）** | scientific-agent-skills | [→](06-catalogs/scientific-skills-INDEX.md) |
+| 🆕 **Claude Code 多智能体 Team 编排** | oh-my-claudecode | [→](07-agent-design/oh-my-claudecode/) |
 
 ---
 

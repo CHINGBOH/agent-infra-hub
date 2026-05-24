@@ -9,8 +9,23 @@
 ```
 09-agent-infra-catalog/
 ├── README.md
-└── catalog.yaml
+├── catalog.yaml
+├── BEST-OF-STACK.md                          ← 🌟 22 模块最优 Agent 拼装蓝图
+└── 2026-05-25-three-new-repos-analysis.md    ← agentmemory + scientific-skills + OMC 三仓库分析
 ```
+
+## 🌟 BEST-OF-STACK.md
+
+跨 17 个仓库（5 个 agent_research champions + 12 个 agent-infra-hub）拆成 **4 层 22 个模块**，
+每个模块都有 🥇主选 + 🥈备选 + ⛔反面，附确切文件路径。是"做 agent 应该抄谁哪个文件"的单一可信源。
+
+涵盖：
+- A. 核心运行时 9 模块（loop / memory / tools / MCP / hooks / provider / streaming / sandbox / prompt）
+- B. 技能层 3 模块（skill-registry / skill-content / skill-discovery）
+- C. 编排层 5 模块（planner / team-swarm / subagent / worktree / hand-off-protocol）
+- D. 开发运维 5 模块（replay / eval / observability / CLI / setup）
+
+附 3 套现成拼装姿势：极简（500 行）/ 生产单 agent（5k 行）/ Multi-agent（10k+ 行）。
 
 ## 分类
 
