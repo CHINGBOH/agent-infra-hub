@@ -6,15 +6,19 @@
 
 ---
 
-## 🏗️ 全栈分 5 层 29 个模块
+## 🏗️ 全栈分 7 层 39 个模块
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
+│  G. Go 后端     ollama · eino · weaviate · mcp-go · gptscript     │  🆕 2026-05-25
+├──────────────────────────────────────────────────────────────────┤
+│  F. Rust 后端   axum · qdrant · meili · tantivy · rig             │  🆕 2026-05-25
+├──────────────────────────────────────────────────────────────────┤
 │  E. 前端 / UI    dev-server · component · chat-ui · BFF · …       │  🆕 2026-05-25
 ├──────────────────────────────────────────────────────────────────┤
 │  D. 开发与运维   replay · eval · observability                    │
 ├──────────────────────────────────────────────────────────────────┤
-│  C. 编排层      planner · team/swarm · subagent · worktree        │
+│  C. 编排层      planner · team/swarm · subagent · worktree · TUI  │
 ├──────────────────────────────────────────────────────────────────┤
 │  B. 技能层      skill-registry · skill-content · skill-discovery  │
 ├──────────────────────────────────────────────────────────────────┤
@@ -321,6 +325,84 @@
 | 🥈 | prettier + eslint | — | 老牌组合，若已重度配置不必换 |
 
 **前端层的 3 种拼装姿势**：见 [2026-05-25-frontend-stack-analysis.md §三](2026-05-25-frontend-stack-analysis.md)。
+
+---
+
+## 🦀 F. Rust 后端（4 个模块，🆕 2026-05-25）
+
+> 来源：`/home/l/projects/agent-infra-hub/11-rust-backend/`  
+> 详细分析见 [2026-05-25-backend-stack-analysis.md](2026-05-25-backend-stack-analysis.md)
+
+### F1. Rust web framework
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **tokio-rs/axum** | `axum/src/extract/` + `routing/` | typed extractors + Tower 中间件，类型推导一流 |
+| 🥈 | actix-web | — | 更老牌但 API 较繁琐 |
+
+### F2. 向量 DB（Rust）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **qdrant/qdrant** | `lib/segment/src/` + `lib/collection/src/` | HNSW + payload filter + sharding，开源向量 DB 一线 |
+
+### F3. 搜索引擎 / 库
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 完整 app | **meilisearch** | `crates/milli/` | typo-tolerance + 可配置排序规则，50k★ |
+| 🥇 嵌入式库 | **quickwit-oss/tantivy** | `src/` + `columnar/` | Lucene 思想 Rust 重写，无服务器进程 |
+
+### F4. Rust LLM/agent 框架
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **0xPlaygrounds/rig** | `crates/rig-core/` + 18 个 adapter crates | **9 个向量 DB adapter**（qdrant/mongo/pg/sqlite/lancedb/milvus/neo4j/scylla/surreal）+ `rig-memory`；Coral / Neon / 圣裘德医院在生产使用 |
+
+---
+
+## 🐹 G. Go 后端（5 个模块，🆕 2026-05-25）
+
+> 来源：`/home/l/projects/agent-infra-hub/12-go-backend/`
+
+### G1. 本地 LLM serving
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **ollama/ollama** | `server/` + `cmd/` + 🔥 `anthropic/anthropic.go` | 100k★；OpenAI + **Anthropic 双协议**兼容（Claude Code 可直连） |
+
+### G2. Go LLM 框架
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **cloudwego/eino** | `adk/turn_loop.go` + `adk/react.go` + `flow/{agent,indexer,retriever}/` + `compose/` | ByteDance 出品，agent 主循环 + interrupt/cancel + failover + 图式编排，最现代 |
+| 🥈 | tmc/langchaingo | `agents/` `chains/` `vectorstores/` | LangChain 概念 Go 映射，迁移友好但设计偏旧 |
+
+### G3. 向量 DB（Go）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **weaviate/weaviate** | `adapters/` + `modules/` + `cluster/` | 模块化 vectorizer + 内置 reranker + Raft；附 `CLAUDE.md` "No bug is ever out of scope" |
+
+### G4. MCP server (Go)
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **mark3labs/mcp-go** | `server/hooks.go` + `server/elicitation.go` + `otel/` | 完整 MCP server SDK，支持 elicitation 双向交互 + OTel |
+
+### G5. 声明式 agent 脚本
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **gptscript-ai/gptscript** | `pkg/runner/` + `pkg/tools/` | Markdown/YAML 写 agent 工作流，非开发用户友好 |
+
+---
+
+## 🖥️ C6 补：TUI / CLI 形态
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **ratatui/ratatui** | `src/` + `ARCHITECTURE.md` | Claude Code/gemini-cli 之类 TUI agent 的事实标准；Widget + Layout constraint |
 
 ---
 

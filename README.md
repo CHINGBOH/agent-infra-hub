@@ -4,7 +4,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~2.6 GB | 48 个仓库 | 10 个分类 | 7 个知识图谱**
+**~2.9 GB | 60 个仓库 | 12 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -55,6 +55,10 @@ LLM（CPU）
 | 🆕 **22 模块表升级到 29 模块（含前端层）** | BEST-OF-STACK.md §E | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
 | 🆕 **Vite / shadcn-ui / TanStack-Query 等 7 前端标杆** | 10-frontend-stack/ | [→](10-frontend-stack/) |
 | 🆕 **前端栈分析（shadcn 官方 SKILL.md 演进记录）** | 2026-05-25-frontend-stack-analysis.md | [→](09-agent-infra-catalog/2026-05-25-frontend-stack-analysis.md) |
+| 🆕 **22 → 39 模块升级（含 Rust + Go 后端层）** | BEST-OF-STACK.md §F/G | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
+| 🆕 **Rust 后端 6 明星（axum/qdrant/meili/tantivy/rig/ratatui）** | 11-rust-backend/ | [→](11-rust-backend/) |
+| 🆕 **Go 后端 6 明星（ollama/eino/weaviate/mcp-go/gptscript/langchaingo）** | 12-go-backend/ | [→](12-go-backend/) |
+| 🆕 **后端栈分析（含 AGENTS.md/CLAUDE.md 文化收获）** | 2026-05-25-backend-stack-analysis.md | [→](09-agent-infra-catalog/2026-05-25-backend-stack-analysis.md) |
 
 ---
 
