@@ -4,7 +4,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~664 MB | 41 个仓库 | 9 个分类 | 7 个知识图谱**
+**~2.6 GB | 48 个仓库 | 10 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -52,6 +52,9 @@ LLM（CPU）
 | 🆕 **持久化记忆 + 混合检索（53 MCP / 12 hooks / 0 DB）** | agentmemory | [→](08-infrastructure/agentmemory/) |
 | 🆕 **138 科学 SKILL.md（17 个学科领域）** | scientific-agent-skills | [→](06-catalogs/scientific-skills-INDEX.md) |
 | 🆕 **Claude Code 多智能体 Team 编排** | oh-my-claudecode | [→](07-agent-design/oh-my-claudecode/) |
+| 🆕 **22 模块表升级到 29 模块（含前端层）** | BEST-OF-STACK.md §E | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
+| 🆕 **Vite / shadcn-ui / TanStack-Query 等 7 前端标杆** | 10-frontend-stack/ | [→](10-frontend-stack/) |
+| 🆕 **前端栈分析（shadcn 官方 SKILL.md 演进记录）** | 2026-05-25-frontend-stack-analysis.md | [→](09-agent-infra-catalog/2026-05-25-frontend-stack-analysis.md) |
 
 ---
 

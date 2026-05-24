@@ -6,10 +6,12 @@
 
 ---
 
-## 🏗️ 全栈分 4 层 22 个模块
+## 🏗️ 全栈分 5 层 29 个模块
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
+│  E. 前端 / UI    dev-server · component · chat-ui · BFF · …       │  🆕 2026-05-25
+├──────────────────────────────────────────────────────────────────┤
 │  D. 开发与运维   replay · eval · observability                    │
 ├──────────────────────────────────────────────────────────────────┤
 │  C. 编排层      planner · team/swarm · subagent · worktree        │
@@ -261,6 +263,64 @@
 | | 仓库 | 文件 | 卖点 |
 |---|---|---|---|
 | 🥇 | **oh-my-claudecode** | `commands/omc-setup.md` + `commands/omc-doctor.md` | 一键安装 + 健康检查 |
+
+---
+
+## 🎨 E. 前端 / UI / SDK（7 个模块，🆕 2026-05-25）
+
+> 来源：`/home/l/projects/agent-infra-hub/10-frontend-stack/` 浅克隆 7 个明星仓库  
+> 详细分析见 [2026-05-25-frontend-stack-analysis.md](2026-05-25-frontend-stack-analysis.md)
+
+### E1. 构建工具 / Dev Server
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **vitejs/vite** | `packages/vite/src/node/server/` + `plugin.ts` | HMR + ESM dev server 标杆，插件协议被全行业采用 |
+| 🥈 | turbopack / rspack | — | Rust 重写版，需更高性能再换 |
+
+### E2. UI 组件库（拷贝式）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **shadcn-ui/ui** | `apps/v4/registry/new-york-v4/ui/` | 拷贝粘贴范式，无 npm 依赖；**自带 [SKILL.md](../10-frontend-stack/shadcn-ui/skills/shadcn/SKILL.md) 含新字段 `user-invocable` / `allowed-tools`** |
+| 🥈 | radix-ui / headlessui | — | 底层无样式原语，shadcn 就是基于 radix |
+
+### E3. 异步状态管理
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **TanStack/query** | `packages/query-core/src/` | 框架无关核心 + staleTime/gcTime 双缓存 + 自动 dedup |
+| 🥈 | swr | — | Vercel 出品，更轻但功能少 |
+
+### E4. BFF / Edge web framework
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **honojs/hono** | `src/hono-base.ts` (545) + `src/context.ts` (780) | 极致优雅，5 router 可换，类型推导一流；适合 MCP server / RAG API |
+| 🥈 | fastify | — | Node 老牌，性能也好但 API 较繁琐 |
+
+### E5. LLM SDK / Provider 适配
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **vercel/ai** | `packages/ai/src/` + 58 个 provider 包 | 当前最完整的 provider 集合 + `LanguageModelV2` 契约 + v5 agent loop 原语 |
+| 🥈 | hermes-agent provider 层 | — | 仅参考接口，实际抄 vercel-ai |
+
+### E6. Chat UI 组件
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **assistant-ui** | `packages/core/` + `packages/react/` | Thread / Branching / 流式 + 工具调用 UI；附 6 个 Python 包（LangGraph 接入） |
+| 🥈 | vercel/ai-chatbot | — | 模板项目，可参考结构 |
+
+### E7. 工具链（fmt + lint）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **biomejs/biome** | `crates/biome_*` (Rust) | 单 binary 解决 fmt+lint+import-sort+a11y，10-100x 快 |
+| 🥈 | prettier + eslint | — | 老牌组合，若已重度配置不必换 |
+
+**前端层的 3 种拼装姿势**：见 [2026-05-25-frontend-stack-analysis.md §三](2026-05-25-frontend-stack-analysis.md)。
 
 ---
 
