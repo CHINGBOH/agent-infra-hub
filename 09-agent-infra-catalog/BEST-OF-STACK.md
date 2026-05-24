@@ -6,7 +6,7 @@
 
 ---
 
-## 🏗️ 全栈分 12 层 59 个模块
+## 🏗️ 全栈分 18 层 80 个模块
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -557,6 +557,156 @@
 | | 仓库 | 文件 | 卖点 |
 |---|---|---|---|
 | 🥇 | **open-compass/opencompass** | `configs/datasets/` | 上海 AI Lab；C-Eval/CMMLU/MMLU-CN 等；模型↔数据集↔评测器三层解耦 |
+
+---
+
+## 🖼️ M. Multimodal / Vision Agent（3 个模块，🆕 2026-05-25）
+
+### M1. 多模态 agent 框架
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **QwenLM/Qwen-Agent** | `qwen_agent/agents/` | 阿里多模态 agent loop + function call + RAG + GUI |
+| 🥈 | landing-ai/vision-agent | — | 自然语言 → vision pipeline 代码生成 |
+
+### M2. VLM 训练/推理参考
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **OpenGVLab/InternVL** | 416 py | 完整 VLM 训练管线参考 |
+| 🥈 | haotian-liu/LLaVA | 61 py | 多模态对话开山之作，微调脚本骨架 |
+
+### M3. （预留，跨模态评测）
+
+---
+
+## 🛡️ N. Safety / Red-team / Guardrails（4 个模块，🆕 2026-05-25）
+
+### N1. 红队 / 攻击 probe（事实标准）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **NVIDIA/garak** | `garak/probes/` × **44 类** | dan/jailbreak/promptinject/atkgen/leak/encoding/...；agent 上线前必跑；AGENTS.md |
+
+### N2. 运行时防护轨
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **NVIDIA/NeMo-Guardrails** | `nemoguardrails/colang/` | Colang DSL；输入/输出/对话拦截器 |
+
+### N3. PII 检测 / 脱敏
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **microsoft/presidio** | `presidio-analyzer/` | 25+ 实体类型，多语言 |
+
+### N4. Prompt 鲁棒性 / 对抗攻击
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **microsoft/promptbench** | — | Prompt 鲁棒性评测 |
+| 🥈 | llm-attacks/llm-attacks | — | CMU GCG 攻击参考实现 |
+
+---
+
+## 🏖️ O. Sandbox / 代码执行（4 个模块，🆕 2026-05-25）
+
+### O1. LLM 代码沙箱 SaaS
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **e2b-dev/e2b** | `packages/python-sdk` | LLM 沙箱 SaaS + 开源 SDK；agent 标配；CLAUDE.md |
+
+### O2. Dev environment 平台
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **daytonaio/daytona** | 794 py | Workspace 隔离，多 agent 适用；AGENTS.md |
+
+### O3. 浏览器侧 Python WASM
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **pyodide/pyodide** | — | 完全前端 agent 沙箱（无后端）；AGENTS.md |
+
+### O4. 本地代码解释器
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **OpenInterpreter/open-interpreter** | — | 60k★ 老牌本地解释器 |
+
+---
+
+## 🧠 P. Memory（4 个模块，🆕 2026-05-25）
+
+### P1. 自动事实抽取 + 自家 MCP 服务
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **mem0ai/mem0** | `openmemory/` + `skills/` × 5 + AGENTS.md + CLAUDE.md | 30k★ 用户最多；记忆产品 + 自家 MCP 范本 |
+
+### P2. 分层记忆（前 MemGPT）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **letta-ai/letta** | `letta/agent.py` | core / recall / archival 分层 + 持久 agent state |
+
+### P3. 知识图谱式记忆 ECL
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **topoteretes/cognee** | `cognee/modules/cognify/` × 1524 py | 知识图谱 ECL 管线；最重最完整；AGENTS.md+CLAUDE.md |
+
+### P4. Go 实现 / 知识图谱服务
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **getzep/zep** | Go | 高性能记忆服务（已转型 ZepCloud） |
+
+---
+
+## 🔌 Q. MCP Ecosystem（3 个模块，🆕 2026-05-25）
+
+### Q1. 官方 SDK + 参考 server
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **modelcontextprotocol/servers** | `src/{filesystem,git,memory,fetch,time,sequentialthinking,everything}/` | 7 个官方参考 server，写 MCP server 抄这套 |
+| 🥇 | **modelcontextprotocol/python-sdk** | `src/mcp/server/fastmcp.py` | FastMCP 装饰器 API；AGENTS.md+CLAUDE.md |
+
+### Q2. MCP-native agent 框架
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **lastmile-ai/mcp-agent** | `src/mcp_agent/workflows/` | 用 MCP 协议编排 agent + workflow |
+
+### Q3. MCP 社区索引
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **punkpeye/awesome-mcp-servers** | — | 60k★ 社区 MCP server 索引 |
+
+---
+
+## 🎙️ R. Voice / 实时 agent（3 个模块，🆕 2026-05-25）
+
+### R1. WebRTC 实时 agent（71 个 plugin）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **livekit/agents** | `livekit-plugins/` × **71 个** | anthropic/openai/aws/azure/google/elevenlabs/deepgram/cartesia/assemblyai/...；AGENTS.md+CLAUDE.md |
+
+### R2. Frame-based pipeline
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **pipecat-ai/pipecat** | `src/pipecat/frames/` | Daily.co 出品；frame-based 实时管线；AGENTS.md+CLAUDE.md |
+
+### R3. 自托管 voice agent
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **vocodedev/vocode-core** | — | 自托管 voice agent 平台 |
 
 ---
 

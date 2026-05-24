@@ -4,7 +4,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~5.0 GB | 82 个仓库 | 17 个分类 | 7 个知识图谱**
+**~6.1 GB | 106 个仓库 | 23 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -68,6 +68,14 @@ LLM（CPU）
 | 🆕 **RAG 6 明星（ragflow/llama_index/haystack/graphrag/LightRAG/FlashRAG）** | 16-rag-stack/ | [→](16-rag-stack/) |
 | 🆕 **评测 4 明星（ragas/lm-eval/BFCL/opencompass）** | 17-evaluation/ | [→](17-evaluation/) |
 | 🆕 **RAG + Evaluation 分析（含 4 种 RAG 组合）** | 2026-05-25-rag-eval-analysis.md | [→](09-agent-infra-catalog/2026-05-25-rag-eval-analysis.md) |
+| 🆕 **59 → 80 模块（含 M-R 六大新层）** | BEST-OF-STACK.md §M-R | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
+| 🆕 **多模态（Qwen-Agent/InternVL/LLaVA/vision-agent）** | 18-multimodal/ | [→](18-multimodal/) |
+| 🆕 **安全红队（garak 44 类 probe + NeMo-Guardrails 等）** | 19-safety/ | [→](19-safety/) |
+| 🆕 **沙箱（e2b/daytona/pyodide/open-interpreter）** | 20-sandbox/ | [→](20-sandbox/) |
+| 🆕 **记忆专题（mem0/letta/zep/cognee）** | 21-memory/ | [→](21-memory/) |
+| 🆕 **MCP 生态（官方 servers + Py SDK + mcp-agent）** | 22-mcp-ecosystem/ | [→](22-mcp-ecosystem/) |
+| 🆕 **语音/实时 agent（livekit 71 plugin / pipecat / vocode）** | 23-voice/ | [→](23-voice/) |
+| 🆕 **第 5 批分析（六大领域汇总 + 6 种新组合）** | 2026-05-25-multimodal-safety-sandbox-memory-mcp-voice-analysis.md | [→](09-agent-infra-catalog/2026-05-25-multimodal-safety-sandbox-memory-mcp-voice-analysis.md) |
 
 ---
 
