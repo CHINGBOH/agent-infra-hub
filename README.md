@@ -4,7 +4,7 @@
 
 围绕 LLM 的微型 OS — Skills / Agent 框架 / 基础设施四大支柱的完整参考库。
 
-**~2.9 GB | 60 个仓库 | 12 个分类 | 7 个知识图谱**
+**~3.9 GB | 72 个仓库 | 15 个分类 | 7 个知识图谱**
 
 ```
 LLM（CPU）
@@ -59,6 +59,11 @@ LLM（CPU）
 | 🆕 **Rust 后端 6 明星（axum/qdrant/meili/tantivy/rig/ratatui）** | 11-rust-backend/ | [→](11-rust-backend/) |
 | 🆕 **Go 后端 6 明星（ollama/eino/weaviate/mcp-go/gptscript/langchaingo）** | 12-go-backend/ | [→](12-go-backend/) |
 | 🆕 **后端栈分析（含 AGENTS.md/CLAUDE.md 文化收获）** | 2026-05-25-backend-stack-analysis.md | [→](09-agent-infra-catalog/2026-05-25-backend-stack-analysis.md) |
+| 🆕 **39 → 50 模块（含 Python agent / 异步 / 可观测）** | BEST-OF-STACK.md §H/I/J | [→](09-agent-infra-catalog/BEST-OF-STACK.md) |
+| 🆕 **Python Agent 6 明星（dify/autogen/crewai/langgraph/openai-agents/smolagents）** | 13-python-agents/ | [→](13-python-agents/) |
+| 🆕 **异步基础设施 3 明星（temporal/nats/cua）** | 14-async-infra/ | [→](14-async-infra/) |
+| 🆕 **LLM 可观测 3 明星（langfuse/phoenix/openllmetry）** | 15-observability/ | [→](15-observability/) |
+| 🆕 **Python+异步+可观测分析（AGENTS.md/CLAUDE.md 趋势统计）** | 2026-05-25-python-infra-obs-analysis.md | [→](09-agent-infra-catalog/2026-05-25-python-infra-obs-analysis.md) |
 
 ---
 

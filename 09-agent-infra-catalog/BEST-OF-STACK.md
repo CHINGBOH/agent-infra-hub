@@ -6,15 +6,21 @@
 
 ---
 
-## 🏗️ 全栈分 7 层 39 个模块
+## 🏗️ 全栈分 10 层 50 个模块
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  G. Go 后端     ollama · eino · weaviate · mcp-go · gptscript     │  🆕 2026-05-25
+│  J. 可观测性     langfuse · phoenix · openllmetry                 │  🆕 2026-05-25
 ├──────────────────────────────────────────────────────────────────┤
-│  F. Rust 后端   axum · qdrant · meili · tantivy · rig             │  🆕 2026-05-25
+│  I. 异步基础     temporal · nats · cua                            │  🆕 2026-05-25
 ├──────────────────────────────────────────────────────────────────┤
-│  E. 前端 / UI    dev-server · component · chat-ui · BFF · …       │  🆕 2026-05-25
+│  H. Python Agent dify · autogen · crewai · langgraph · smolagents │  🆕 2026-05-25
+├──────────────────────────────────────────────────────────────────┤
+│  G. Go 后端     ollama · eino · weaviate · mcp-go · gptscript     │
+├──────────────────────────────────────────────────────────────────┤
+│  F. Rust 后端   axum · qdrant · meili · tantivy · rig             │
+├──────────────────────────────────────────────────────────────────┤
+│  E. 前端 / UI    dev-server · component · chat-ui · BFF · …       │
 ├──────────────────────────────────────────────────────────────────┤
 │  D. 开发与运维   replay · eval · observability                    │
 ├──────────────────────────────────────────────────────────────────┤
@@ -403,6 +409,89 @@
 | | 仓库 | 文件 | 卖点 |
 |---|---|---|---|
 | 🥇 | **ratatui/ratatui** | `src/` + `ARCHITECTURE.md` | Claude Code/gemini-cli 之类 TUI agent 的事实标准；Widget + Layout constraint |
+
+---
+
+## 🐍 H. Python Agent 框架（5 个模块，🆕 2026-05-25）
+
+> 来源：`/home/l/projects/agent-infra-hub/13-python-agents/`  
+> 详细分析见 [2026-05-25-python-infra-obs-analysis.md](2026-05-25-python-infra-obs-analysis.md)
+
+### H1. 一站式 agent 平台
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **langgenius/dify** | `api/core/{agent,mcp,memory,llm_generator}/` + `indexing_runner.py` | 90k★；RAG + Workflow + MCP + 多租户 + RBAC 全栈 |
+
+### H2. 多 agent 框架（消息）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **microsoft/autogen** | `python/packages/autogen-core/src/autogen_core/_agent*.py` | 10 子包，Agent runtime + pub-sub + Magentic-One |
+| 🥈 | crewAIInc/crewAI | `lib/crewai-core/src/` | role-based 业务可读性高 |
+
+### H3. 有状态 agent graph
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **langchain-ai/langgraph** | `libs/langgraph/langgraph/{pregel,channels,graph,managed}/` + `libs/checkpoint-{postgres,sqlite}/` | Pregel 模型 + 检查点持久化 + Py/JS 双 SDK；长跑任务首选 |
+
+### H4. 官方 SDK
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **openai/openai-agents-python** | `src/agents/{guardrail,handoffs,mcp,lifecycle,computer}.py` | GPT 系列原生 agent 事实标准；含 guardrail / handoffs / computer use |
+
+### H5. 极简代码 agent
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **huggingface/smolagents** | `src/smolagents/` (仅 75 个 py 文件) | CodeAgent 用 Python 代码代替 JSON tool call；想学 "agent 最少需要什么" 读这个 |
+
+---
+
+## ⏱️ I. 异步基础设施（3 个模块，🆕 2026-05-25）
+
+### I1. Workflow 引擎
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **temporalio/temporal** | `service/{frontend,history,matching,worker}/` | 任意代码加装饰器 → 持久化 + 崩溃恢复 + Determinism replay |
+
+### I2. 消息总线
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **nats-io/nats-server** | `server/` | 单 binary 12MB + Subject 命名空间 + JetStream 持久化 |
+
+### I3. Computer-use sidecar
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **trycua/cua** | `libs/{cua-driver,lume,lumier,qemu-docker,xfce}/` | 完整桌面虚拟化栈（Xfce/QEMU/Lume macOS VM），给 agent 完整 Linux/macOS 桌面 |
+
+---
+
+## 📊 J. 可观测性（3 个模块，🆕 2026-05-25）
+
+### J1. LLM 全栈可观测（生产标配）
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **langfuse/langfuse** | `web/src/` + `packages/shared/` | Trace + Generation + Span + Prompt mgmt + Eval；Self-host 友好 |
+| 🥈 | Arize-ai/phoenix | `src/phoenix/` | 偏 eval 工作流 + Vector visualizer |
+
+### J2. LLM eval 工作流
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **Arize-ai/phoenix** | `src/phoenix/core/` + `src/phoenix/datasets/` | hallucination 检测 + LlamaIndex/LangChain 集成 |
+
+### J3. LLM OTel 插桩
+
+| | 仓库 | 文件 | 卖点 |
+|---|---|---|---|
+| 🥇 | **traceloop/openllmetry** | `packages/opentelemetry-instrumentation-*/` × **31 个** | 覆盖几乎所有 Python LLM 框架（anthropic / openai / langchain / llamaindex / crewai / agno / mcp / 8 个向量 DB）；30 行代码加观测 |
 
 ---
 
