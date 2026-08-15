@@ -11,3 +11,19 @@
 .vscode/
 .idea/
 *.swp
+
+# Lean Architecture Anti-Bloat Filters
+*.py[cod]
+*$py.class
+*.bak
+*.tmp
+*.orig
+*.swo
+Thumbs.db
+*.tsbuildinfo
+*.log
+.venv/
+env/
+dist/
+build/
+.cache/
